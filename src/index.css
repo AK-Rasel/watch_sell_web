@@ -3,3 +3,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.menu-icon {
+  transition: transform 0.5s ease;
+}
+
+.menu-icon.open {
+  transform: rotate(90deg);
+}
+
+.mobile-nav {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+}
+
+.mobile-nav.open {
+  max-height: 500px; /* Adjust based on your content height */
+}
+
+.mobile-nav.closing {
+  max-height: 0;
+}
