@@ -46,19 +46,19 @@ const Navbar = () => {
       setTimeout(() => {
         setIsToggleMenu(false);
         setIsClosing(false);
-      }, 500); // Match this duration with the CSS transition duration
+      }, 500);
     } else {
       setIsToggleMenu(true);
     }
   };
 
   return (
-    <header className="w-full fixed top-0 right-0 transition-all duration-300 ease-in-out">
+    <header className="w-full fixed top-0 right-0 z-50">
       <nav
-        className={`z-20 ${
+        className={` ${
           isSticky
-            ? "shadow-xl transition-all duration-300 ease-out py-5 px-8"
-            : "bg-secondary_color transition-all duration-300 ease-out p-8"
+            ? "shadow-xl transition-all duration-300 ease-out py-5 px-8 bg-white"
+            : "bg-transparent px-8 pt-10"
         }`}
       >
         <div className="flex justify-between items-center">
@@ -76,7 +76,7 @@ const Navbar = () => {
               {navLinks.map((navItem, index) => (
                 <li
                   key={index}
-                  className={`text-sm font-bold hover:duration-300 hover:underline transition-all antialiased hover:text-[#828282] ${
+                  className={`text-base font-bold hover:duration-300 hover:underline transition-all antialiased hover:text-[#828282] ${
                     isSticky ? "text-secondary_color" : "text-text_white"
                   }`}
                 >
