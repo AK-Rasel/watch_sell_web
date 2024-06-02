@@ -126,22 +126,26 @@ const Navbar = () => {
               {navLinks.map((navItem, index) => (
                 <li
                   key={index}
-                  className="text-sm font-bold hover:duration-300 hover:underline transition-all antialiased hover:text-[#828282] text-white py-2"
+                  className="text-sm font-normal hover:duration-300 hover:underline transition-all antialiased hover:text-[#828282] text-white py-2"
                 >
                   <Link to={navItem.navPath}>{navItem.name}</Link>
-                  <div className="w-full my-3 border-secondary_background_color border-t-2"></div>
+                  {navItem.name === "Shop" ? (
+                    ""
+                  ) : (
+                    <div className="w-full my-3 border-secondary_background_color border-t-2"></div>
+                  )}
                 </li>
               ))}
             </div>
             <div className="ml-4">
-              <button className="btn bg-primary_color  px-8    hover:bg-primary_hover_color hover:duration-200 hover:transition-all my-[30px] text-white py-4 text-sm font-bold uppercase rounded-full">
+              <button className="btn bg-primary_color  px-8   hover:bg-primary_hover_color hover:duration-200 hover:transition-all my-[42px] text-white py-4 text-sm font-bold uppercase rounded-full">
                 Login
               </button>
             </div>
             <span className="flex items-center px-5">
               <input
                 type="text"
-                className="w-full h-16 placeholder:italic border-none outline-none bg-secondary_color text-text_hover_color font-extrabold text-3xl"
+                className="w-full h-16 placeholder:italic border-none outline-none bg-secondary_color text-text_hover_color font-extrabold text-3xl pb-2"
                 placeholder="Search Now..."
               />
               <button>
