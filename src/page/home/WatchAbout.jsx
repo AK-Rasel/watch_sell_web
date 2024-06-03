@@ -1,21 +1,16 @@
 // src/pages/WatchAbout.js
 import "swiper/css";
-import "swiper/css/pagination";
 import "swiper/css/navigation";
 
-import { Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import gallery5 from "../../assets/Home/gallery5.jpg";
 import gallery6 from "../../assets/Home/gallery6.jpg";
 import gallery7 from "../../assets/Home/gallery7.jpg";
-import Watchwhite from "../../assets/Home/Watchwhite.jpg";
-import Watchwhite2 from "../../assets/Home/Watchwhite2.jpg";
-import Watchwhite3 from "../../assets/Home/Watchwhite3.jpg";
 import Watchwhite4 from "../../assets/Home/Watchwhite4.jpg";
 import Watchwhite5 from "../../assets/Home/Watchwhite5.jpg";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { CiZoomIn } from "react-icons/ci";
 import Modal from "../../components/Modal";
 
@@ -28,6 +23,8 @@ const watchVariety = [
 ];
 
 const WatchAbout = () => {
+  const swiperRef = useRef(null);
+
   useEffect(() => {
     const handleScroll = () => {
       const bgDiv = document.getElementById("bg-div");
@@ -44,10 +41,18 @@ const WatchAbout = () => {
   // Modal state
   const [showModal, setShowModal] = useState(false);
   const [modalImage, setModalImage] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const toggleModal = (imageUrl = null) => {
     setShowModal(!showModal);
     setModalImage(imageUrl);
+  };
+
+  const handleBulletClick = (index) => {
+    if (swiperRef.current && swiperRef.current.swiper) {
+      swiperRef.current.swiper.slideTo(index);
+      setActiveIndex(index);
+    }
   };
 
   return (
@@ -78,6 +83,8 @@ const WatchAbout = () => {
           {/* Carousels */}
           <div className="lg:mt-[120px] pb-[200px] relative">
             <Swiper
+              ref={swiperRef}
+              onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
               watchSlidesProgress={true}
               slidesPerView={3}
               className="mySwiper"
@@ -110,6 +117,22 @@ const WatchAbout = () => {
                 );
               })}
             </Swiper>
+            <div className="flex justify-start mt-8 gap-2">
+              {watchVariety.map(
+                (_, index) =>
+                  index % 3 === 0 && (
+                    <span
+                      key={index}
+                      className={`h-2 w-2 mx-1 rounded-full cursor-pointer ${
+                        index === activeIndex
+                          ? "bg-primary_color"
+                          : "bg-gray-300"
+                      }`}
+                      onClick={() => handleBulletClick(index)}
+                    ></span>
+                  )
+              )}
+            </div>
           </div>
         </div>
         <Modal
