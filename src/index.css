@@ -25,3 +25,11 @@
 .mobile-nav.closing {
   max-height: 0;
 }
+
+.zoomBtn {
+  @apply w-16 h-16 flex justify-center items-center rounded-full bg-white absolute top-1/2 bottom-1/2 group-hover:-translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 right-1/2 left-1/2 -translate-x-1/2 z-20;
+}
+
+.imageHover {
+  @apply bg-primary_color h-full px-4 w-full absolute bottom-0 opacity-0 group-hover:opacity-80 transition-opacity duration-700 ease-in-out left-0 z-20 flex items-center justify-center;
+}

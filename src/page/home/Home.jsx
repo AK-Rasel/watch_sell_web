@@ -4,7 +4,7 @@ import WatchAbout from "./WatchAbout";
 
 const Home = () => {
   return (
-    <section className="h-[1600px]">
+    <section className="h-[3000px]">
       <Banner />
       <WatchAbout />
     </section>

@@ -121,8 +121,8 @@ const Navbar = () => {
         }`}
       >
         {isToggleMenu && (
-          <ul className="flex flex-col bg-secondary_color h-[489px] transition-all duration-300 ease-in-out">
-            <div className="px-4">
+          <ul className="flex flex-col bg-secondary_color h-[495px] transition-all duration-300 ease-in-out">
+            <div className="px-4 pt-4">
               {navLinks.map((navItem, index) => (
                 <li
                   key={index}
@@ -142,7 +142,7 @@ const Navbar = () => {
                 Login
               </button>
             </div>
-            <span className="flex items-center px-5">
+            <span className="flex items-center px-5 ">
               <input
                 type="text"
                 className="w-full h-16 placeholder:italic border-none outline-none bg-secondary_color text-text_hover_color font-extrabold text-3xl pb-2"
