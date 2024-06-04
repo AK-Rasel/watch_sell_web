@@ -1,18 +1,15 @@
-// src/pages/WatchAbout.js
 import "swiper/css";
 import "swiper/css/navigation";
-
 import { Swiper, SwiperSlide } from "swiper/react";
+import { useEffect, useState, useRef } from "react";
+import { CiZoomIn } from "react-icons/ci";
+import Modal from "../../components/Modal";
 
 import gallery5 from "../../assets/Home/gallery5.jpg";
 import gallery6 from "../../assets/Home/gallery6.jpg";
 import gallery7 from "../../assets/Home/gallery7.jpg";
 import Watchwhite4 from "../../assets/Home/Watchwhite4.jpg";
 import Watchwhite5 from "../../assets/Home/Watchwhite5.jpg";
-
-import { useEffect, useState, useRef } from "react";
-import { CiZoomIn } from "react-icons/ci";
-import Modal from "../../components/Modal";
 
 const watchVariety = [
   { watch: gallery5 },
@@ -38,14 +35,14 @@ const WatchAbout = () => {
     };
   }, []);
 
-  // Modal state
   const [showModal, setShowModal] = useState(false);
-  const [modalImage, setModalImage] = useState(null);
+  const [modalImages, setModalImages] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const toggleModal = (imageUrl = null) => {
+  const toggleModal = (images = [], index = 0) => {
     setShowModal(!showModal);
-    setModalImage(imageUrl);
+    setModalImages(images);
+    setActiveIndex(index);
   };
 
   const handleBulletClick = (index) => {
@@ -62,7 +59,6 @@ const WatchAbout = () => {
         className="bg-[url('./assets/Home/AllEllipes.jpg')] w-full bg-cover bg-no-repeat bg-center bg-fixed"
       >
         <div className="container mx-auto px-11">
-          {/* Header */}
           <div className="text-center md:w-[620px] mx-auto lg:pt-[200px] pt-24 ">
             <h3 className="text-sm font-semibold md:mb-5 mb-2 text-text_hover_color ">
               ABOUT OUR WATCHES
@@ -80,7 +76,6 @@ const WatchAbout = () => {
               gravida.
             </p>
           </div>
-          {/* Carousels */}
           <div className="lg:mt-[120px] pb-[200px] relative">
             <Swiper
               ref={swiperRef}
@@ -89,33 +84,30 @@ const WatchAbout = () => {
               slidesPerView={3}
               className="mySwiper"
             >
-              {watchVariety.map((watchItem, index) => {
-                return (
-                  <SwiperSlide key={index}>
-                    <div className="relative overflow-hidden mx-2 group">
-                      <div className="relative z-10">
-                        <img
-                          className="group-hover:scale-110 transition-all duration-300"
-                          src={watchItem.watch}
-                          alt=""
-                          onClick={() => toggleModal(watchItem.watch)}
-                        />
-                      </div>
-                      <div
-                        className="imageHover cursor-pointer"
-                        onClick={() => toggleModal(watchItem.watch)}
-                      ></div>
-
-                      <button
-                        onClick={() => toggleModal(watchItem.watch)}
-                        className="zoomBtn"
-                      >
-                        <CiZoomIn className="text-3xl opacity-100" />
-                      </button>
+              {watchVariety.map((watchItem, index) => (
+                <SwiperSlide key={index}>
+                  <div className="relative overflow-hidden mx-2 group">
+                    <div className="relative z-10">
+                      <img
+                        className="group-hover:scale-110 transition-all duration-300"
+                        src={watchItem.watch}
+                        alt=""
+                        onClick={() => toggleModal(watchVariety, index)}
+                      />
                     </div>
-                  </SwiperSlide>
-                );
-              })}
+                    <div
+                      className="imageHover cursor-pointer"
+                      onClick={() => toggleModal(watchVariety, index)}
+                    ></div>
+                    <button
+                      onClick={() => toggleModal(watchVariety, index)}
+                      className="zoomBtn"
+                    >
+                      <CiZoomIn className="text-3xl opacity-100" />
+                    </button>
+                  </div>
+                </SwiperSlide>
+              ))}
             </Swiper>
             <div className="flex justify-start mt-8 gap-2">
               {watchVariety.map(
@@ -138,7 +130,8 @@ const WatchAbout = () => {
         <Modal
           show={showModal}
           onClose={() => toggleModal()}
-          imageUrl={modalImage}
+          images={modalImages}
+          initialIndex={activeIndex}
         />
       </div>
     </section>
