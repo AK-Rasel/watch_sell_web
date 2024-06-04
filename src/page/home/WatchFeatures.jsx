@@ -10,10 +10,10 @@ const WatchFeatures = () => {
   return (
     <div className="container mx-auto my-60">
       <div className="flex justify-start ">
-        <div className="w-1/2">
-          <img src={mobileHero} alt="" />
+        <div className="w-1/2 flex-1">
+          <img src={mobileHero} alt="mobileHero" />
         </div>
-        <div className="w-1/2">
+        <div className="w-1/2 flex-1">
           {/* title */}
           <SideTitle subTitle={"MEET WITH OUR"} title={"Splendid Features"} />
           {/* Features */}
