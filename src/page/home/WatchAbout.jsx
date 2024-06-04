@@ -10,11 +10,13 @@ import gallery6 from "../../assets/Home/gallery6.jpg";
 import gallery7 from "../../assets/Home/gallery7.jpg";
 import Watchwhite4 from "../../assets/Home/Watchwhite4.jpg";
 import Watchwhite5 from "../../assets/Home/Watchwhite5.jpg";
+import Watchwhite from "../../assets/Home/Watchwhite.jpg";
 
 const watchVariety = [
   { watch: gallery5 },
   { watch: gallery6 },
   { watch: gallery7 },
+  { watch: Watchwhite },
   { watch: Watchwhite4 },
   { watch: Watchwhite5 },
 ];
@@ -56,9 +58,10 @@ const WatchAbout = () => {
     <section>
       <div
         id="bg-div"
-        className="bg-[url('./assets/Home/AllEllipes.jpg')] w-full bg-cover bg-no-repeat bg-center bg-fixed"
+        className="bgImage w-full relative bg-cover bg-no-repeat bg-center bg-fixed"
       >
         <div className="container mx-auto px-11">
+          {/* text */}
           <div className="text-center md:w-[620px] mx-auto lg:pt-[200px] pt-24 ">
             <h3 className="text-sm font-semibold md:mb-5 mb-2 text-text_hover_color ">
               ABOUT OUR WATCHES
@@ -70,18 +73,29 @@ const WatchAbout = () => {
               Design
               <br /> and Performance
             </h2>
-            <p className="md:text-lg text-base md:mt-10 mt-5 text-wrap">
+            <p className="md:text-lg text-base md:my-10  my-5 text-wrap">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris
               vitae odales lectus, non ultrices nisi. In varius, leo non
               gravida.
             </p>
           </div>
+          {/* swiper */}
           <div className="lg:mt-[120px] pb-[200px] relative">
             <Swiper
               ref={swiperRef}
               onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
               watchSlidesProgress={true}
               slidesPerView={3}
+              breakpoints={{
+                640: {
+                  slidesPerView: 1,
+                  spaceBetween: 20,
+                },
+                768: {
+                  slidesPerView: 3,
+                  spaceBetween: 20,
+                },
+              }}
               className="mySwiper"
             >
               {watchVariety.map((watchItem, index) => (
@@ -115,10 +129,10 @@ const WatchAbout = () => {
                   index % 3 === 0 && (
                     <span
                       key={index}
-                      className={`h-2 w-2 mx-1 rounded-full cursor-pointer ${
+                      className={`lg:h-2 lg:w-2 h-1 w-1 mx-1 rounded-full cursor-pointer ${
                         index === activeIndex
                           ? "bg-primary_color"
-                          : "bg-gray-300"
+                          : "bg-primary_hover_color"
                       }`}
                       onClick={() => handleBulletClick(index)}
                     ></span>

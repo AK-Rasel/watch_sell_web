@@ -63,12 +63,17 @@ const Modal = ({ show, onClose, images, initialIndex }) => {
             modules={[Pagination, EffectFade]}
           >
             {images.map((image, index) => (
-              <SwiperSlide key={index}>
-                <img src={image.watch} alt={`Slide ${index}`} />
+              <SwiperSlide className="z-50" key={index}>
+                <img
+                  className="bg-secondary_color"
+                  src={image.watch}
+                  alt={`Slide ${index}`}
+                />
               </SwiperSlide>
             ))}
           </Swiper>
         </div>
+
         {/* close btn */}
         <div className="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse absolute top-6 right-8 z-50">
           <button onClick={onClose}>
