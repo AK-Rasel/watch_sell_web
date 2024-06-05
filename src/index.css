@@ -36,6 +36,9 @@
 .bgImage {
   @apply bg-[url('./assets/Home/AllEllipes.jpg')];
 }
+.bgImage2 {
+  @apply bg-[url('./assets/Home/Vector-Smart-Object-2copy-2.jpg')];
+}
 
 .box-shadow-hover:hover {
   filter: drop-shadow(0 0 2px #ffffff);

@@ -6,6 +6,7 @@ import Experience from "./Experience";
 import AnimatedComponent from "./AnimatedComponent";
 import HowToWork from "./HowToWork";
 import ChooseColor from "./ChooseColor";
+import Testimonial from "./Testimonial";
 
 const Home = () => {
   return (
@@ -17,6 +18,7 @@ const Home = () => {
       <Experience />
       <HowToWork />
       <ChooseColor />
+      <Testimonial />
     </section>
   );
 };
