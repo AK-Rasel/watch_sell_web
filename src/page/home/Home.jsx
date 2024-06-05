@@ -7,10 +7,11 @@ import AnimatedComponent from "./AnimatedComponent";
 import HowToWork from "./HowToWork";
 import ChooseColor from "./ChooseColor";
 import Testimonial from "./Testimonial";
+import SocialFooter from "./SocialFooter";
 
 const Home = () => {
   return (
-    <section className="h-[8000px]">
+    <section>
       <Banner />
       <WatchAbout />
       <WatchFeatures />
@@ -19,6 +20,7 @@ const Home = () => {
       <HowToWork />
       <ChooseColor />
       <Testimonial />
+      <SocialFooter />
     </section>
   );
 };
