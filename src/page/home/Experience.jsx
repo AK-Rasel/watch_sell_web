@@ -33,7 +33,7 @@ const Experience = () => {
             />
             {/* 3 */}
             <ExperienceContent
-              value={30}
+              value={60}
               title={"+ Display surface"}
               docs={[
                 "Lorem ipsum dolor sit amet, con",

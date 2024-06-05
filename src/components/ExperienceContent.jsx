@@ -9,11 +9,11 @@ const ExperienceContent = ({ value, title, docs }) => {
         {title}
       </h3>
       <p className="text-base text-[#8D8698] mt-3">
-        {docs?.map((doc) => {
+        {docs?.map((doc, index) => {
           return (
-            <>
+            <React.Fragment key={index}>
               {doc} <br />
-            </>
+            </React.Fragment>
           );
         })}
       </p>

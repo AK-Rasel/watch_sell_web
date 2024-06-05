@@ -4,6 +4,7 @@ import WatchAbout from "./WatchAbout";
 import WatchFeatures from "./WatchFeatures";
 import Experience from "./Experience";
 import AnimatedComponent from "./AnimatedComponent";
+import HowToWork from "./HowToWork";
 
 const Home = () => {
   return (
@@ -13,6 +14,7 @@ const Home = () => {
       <WatchFeatures />
       {/* <AnimatedComponent /> */}
       <Experience />
+      <HowToWork />
     </section>
   );
 };

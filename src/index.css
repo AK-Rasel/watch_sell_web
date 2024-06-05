@@ -36,6 +36,7 @@
 .bgImage {
   @apply bg-[url('./assets/Home/AllEllipes.jpg')];
 }
+
 .box-shadow-hover:hover {
   filter: drop-shadow(0 0 2px #ffffff);
 }
@@ -62,3 +63,28 @@
   transition: opacity 0.3s ease-in-out;
 }
 /* anim */
+/* right */
+.slide-right {
+  animation: 1.5s slide-right forwards;
+}
+@keyframes slide-right {
+  from {
+    margin-left: -100%;
+  }
+  to {
+    margin-right: 0%;
+  }
+}
+/* left */
+.slide-left {
+  animation: 1.5s slide-left forwards;
+}
+@keyframes slide-left {
+  from {
+    margin-right: -100%;
+  }
+  to {
+    margin-left: 0%;
+  }
+}
+/* left */

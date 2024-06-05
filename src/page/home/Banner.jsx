@@ -1,6 +1,7 @@
 import heroWatch from "../../assets/Home/WatchBanner.png";
 import smallRing from "../../assets/Home/backgroundSmallEllipse.png";
 import bigRing from "../../assets/Home/backgroundBiglEllipse.png";
+import { useEffect, useState } from "react";
 
 const Banner = () => {
   return (
@@ -22,9 +23,10 @@ const Banner = () => {
             </p>
           </div>
           {/* image */}
-          <div className="xl:w-2/3 lg:w-1/2 mx-auto  relative z-10">
+          <div className=" xl:w-2/3 lg:w-1/2 mx-auto  relative z-10">
             <img
-              className="lg:ml-56 lg:mt-4  md:w-[550px]"
+              // className="slide-left-img lg:ml-56 lg:mt-4  md:w-[550px]"
+              className="slide-left"
               src={heroWatch}
               alt="Watch"
             />
@@ -34,13 +36,13 @@ const Banner = () => {
         <div>
           {/* smallRing */}
           <img
-            className="absolute lg:w-[600px] xl:-top-[300px] xl:-left-[450px] lg:-top-[200px] lg:-left-[570px] md:-top-[200px] md:-left-[540px] top-[100px] -left-[100px] w-44"
+            className="slide-right absolute lg:w-[600px] xl:-top-[300px] xl:-left-[450px] lg:-top-[200px] lg:-left-[570px] md:-top-[200px] md:-left-[540px] top-[100px] -left-[100px] w-44 "
             src={smallRing}
             alt="Ring"
           />
           {/* bigRing image behind heroWatch */}
           <img
-            className="absolute xl:top-[200px] xl:-right-[800px]  xl:max-w-[2000px] lg:w-full  lg:top-[200px] lg:-right-[650px] md:top-[80px] md:-right-2/3 md:max-w-[900px] z-0  top-[255px] -right-2/3 max-w-[500px]"
+            className="slide-left absolute xl:top-[200px] xl:-right-[800px]  xl:max-w-[2000px] lg:w-full  lg:top-[200px] lg:-right-[650px] md:top-[80px] md:-right-2/3 md:max-w-[900px] z-0  top-[255px] -right-2/3 max-w-[500px]"
             src={bigRing}
             alt="big Ring"
           />
