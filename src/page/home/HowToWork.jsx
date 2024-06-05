@@ -17,7 +17,7 @@ const HowToWork = () => {
   }, []);
 
   return (
-    <section className="h-screen">
+    <section>
       <div className="bgImage w-full relative bg-cover bg-no-repeat bg-center bg-fixed">
         <div className="container mx-auto px-11 py-36">
           {/* text */}
@@ -26,26 +26,24 @@ const HowToWork = () => {
               subTitle={"HOW IT WORKS"}
               title={
                 <>
-                  <h2 className="pb-7 text-primary_color">
+                  <h2 className=" text-primary_color leading-tight">
                     See for yourself.
-                    {/* <span></span > <br /> */} <br />
-                    <span className="text-secondary_background_color mt-10">
-                      {" "}
+                    <br />
+                    <span className="text-secondary_background_color">
                       Quick video introductionss
                     </span>
                   </h2>
                 </>
               }
             />
-            <p className="-mt-24 leading-loose text-lg text-secondary_background_color  ">
+            <p className="-mt-16 mb-10 leading-loose text-lg text-secondary_background_color  ">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris
               vitae odales <br /> lectus, non ultrices nisi. In varius, leo non
               gravida.
             </p>
           </div>
-          <div className="my-16">
-            <VideoPlayer />
-          </div>
+
+          <VideoPlayer />
         </div>
       </div>
     </section>

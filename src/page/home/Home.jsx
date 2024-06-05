@@ -5,16 +5,18 @@ import WatchFeatures from "./WatchFeatures";
 import Experience from "./Experience";
 import AnimatedComponent from "./AnimatedComponent";
 import HowToWork from "./HowToWork";
+import ChooseColor from "./ChooseColor";
 
 const Home = () => {
   return (
-    <section>
+    <section className="h-[8000px]">
       <Banner />
       <WatchAbout />
       <WatchFeatures />
       {/* <AnimatedComponent /> */}
       <Experience />
       <HowToWork />
+      <ChooseColor />
     </section>
   );
 };
