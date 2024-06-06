@@ -42,13 +42,10 @@ const Modal = ({ show, onClose, images, initialIndex }) => {
   };
 
   return (
-    <div className="fixed z-50 inset-0 bg-gray-800 bg-opacity-75">
-      <div
-        onClick={onClose}
-        className="w-screen h-screen relative z-40 flex items-center justify-center"
-      >
+    <div className="fixed z-50 inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
+      <div className="relative z-40 w-full h-full flex items-center justify-center">
         <div
-          className={`bg-white rounded-lg overflow-hidden transform transition-all sm:max-w-lg sm:w-full ${
+          className={`bg-white rounded-lg overflow-hidden transform transition-all w-full sm:max-w-lg ${
             fade ? "fade" : ""
           }`}
           onClick={(e) => e.stopPropagation()}
@@ -63,9 +60,9 @@ const Modal = ({ show, onClose, images, initialIndex }) => {
             modules={[Pagination, EffectFade]}
           >
             {images.map((image, index) => (
-              <SwiperSlide className="z-50" key={index}>
+              <SwiperSlide key={index}>
                 <img
-                  className="bg-secondary_color"
+                  className="w-full h-auto object-cover"
                   src={image.watch}
                   alt={`Slide ${index}`}
                 />
@@ -73,31 +70,25 @@ const Modal = ({ show, onClose, images, initialIndex }) => {
             ))}
           </Swiper>
         </div>
-
-        {/* close btn */}
-        <div className="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse absolute top-6 right-8 z-50">
-          <button onClick={onClose}>
-            <IoIosCloseCircleOutline className="box-shadow-hover text-5xl text-white" />
-          </button>
-        </div>
       </div>
-      {/* next and prev btn */}
-      <div className="absolute top-1/2 -translate-y-1/2 left-4 z-50 bottom-1/2">
-        <button
-          onClick={handlePrev}
-          className="border-2 border-white rounded-full text-white p-2"
-        >
-          <GrPrevious className="text-white text-2xl" />
-        </button>
-      </div>
-      <div className="absolute top-1/2 -translate-y-1/2 right-4 z-50 bottom-1/2">
-        <button
-          onClick={handleNext}
-          className="border-2 border-white rounded-full text-white p-2"
-        >
-          <GrNext className="text-white text-2xl" />
-        </button>
-      </div>
+      <button
+        onClick={onClose}
+        className="absolute top-6 right-8 z-50 text-5xl text-white"
+      >
+        <IoIosCloseCircleOutline />
+      </button>
+      <button
+        onClick={handlePrev}
+        className="absolute bottom-8 md:top-1/2 md:-translate-y-1/2 left-4 z-50 p-2 border-2 border-white rounded-full text-2xl text-white"
+      >
+        <GrPrevious />
+      </button>
+      <button
+        onClick={handleNext}
+        className="absolute bottom-8 md:top-1/2 md:-translate-y-1/2 right-4 z-50 p-2 border-2 border-white rounded-full text-2xl text-white"
+      >
+        <GrNext />
+      </button>
     </div>
   );
 };
