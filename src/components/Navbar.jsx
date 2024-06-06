@@ -66,7 +66,10 @@ const Navbar = () => {
       }
     };
 
-    const navLinks = document.querySelectorAll(".smooth-scroll");
+    const navLinks = document.querySelectorAll(
+      ".smooth-scroll",
+      "smooth-scrollMobile"
+    );
     navLinks.forEach((link) => {
       link.addEventListener("click", handleSmoothScroll);
     });
@@ -98,6 +101,7 @@ const Navbar = () => {
             </Link>
           </h1>
           <div className="hidden lg:block">
+            {/* display nav */}
             <ul className="flex items-center gap-8">
               {navLinks.map((navItem, index) => (
                 <li
@@ -143,6 +147,7 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
+      {/* mobile nav */}
       <nav
         className={`lg:hidden block mobile-nav ${isToggleMenu ? "open" : ""} ${
           isClosing ? "closing" : ""
@@ -156,7 +161,13 @@ const Navbar = () => {
                   key={index}
                   className="text-sm font-normal hover:duration-300 hover:underline transition-all antialiased hover:text-[#828282] text-white py-2"
                 >
-                  <Link to={navItem.navPath}>{navItem.name}</Link>
+                  <a
+                    onClick={toggleMenu}
+                    href={navItem.navPath}
+                    className="smooth-scrollMobile"
+                  >
+                    {navItem.name}
+                  </a>
                   {navItem.name === "Shop" ? (
                     ""
                   ) : (
