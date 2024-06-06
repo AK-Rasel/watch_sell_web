@@ -8,20 +8,24 @@ import { FiWifi } from "react-icons/fi";
 
 const WatchFeatures = () => {
   return (
-    <div className="container mx-auto my-60">
-      <div className="flex justify-start ">
-        <div className="w-1/2 flex-1">
-          <img src={mobileHero} alt="mobileHero" />
+    <section className="container mx-auto my-20 px-4 sm:px-6 lg:px-8">
+      <div className="flex lg:flex-row flex-col justify-center lg:justify-end items-center w-full gap-12 lg:gap-24">
+        <div className="w-full lg:w-1/2 md:px-0 px-10 flex justify-center mb-4">
+          <img
+            src={mobileHero}
+            alt="mobileHero"
+            className="max-w-full h-auto"
+          />
         </div>
-        <div className="w-1/2 flex-1">
+        <div className="w-full lg:w-1/2 md:px-28 px-8 lg:px-0">
           {/* title */}
-          <SideTitle subTitle={"MEET WITH OUR"} title={"Splendid Features"} />
+          <SideTitle subTitle="MEET WITH OUR" title="Splendid Features" />
           {/* Features */}
-          <div className="flex flex-col space-y-20">
+          <div className="flex flex-col space-y-10 mt-8 lg:mt-0">
             {/* Voice Recognition */}
             <FeaturesContact
               icon={<CiMicrophoneOn className="text-4xl text-primary_color" />}
-              title={"Voice Recognition"}
+              title="Voice Recognition"
               docs={[
                 "Lorem ipsum dolor sit amet,",
                 "consectetur adipiscing elit. Mauris",
@@ -32,7 +36,7 @@ const WatchFeatures = () => {
               icon={
                 <SlScreenSmartphone className="text-3xl text-primary_color" />
               }
-              title={"Connect with your phone"}
+              title="Connect with your phone"
               docs={[
                 "Lorem ipsum dolor sit amet,",
                 "consectetur adipiscing elit. Mauris",
@@ -43,7 +47,7 @@ const WatchFeatures = () => {
               icon={
                 <FiWifi className="rotate-45 text-3xl text-primary_color" />
               }
-              title={"Any task at hand"}
+              title="Any task at hand"
               docs={[
                 "Lorem ipsum dolor sit amet,",
                 "consectetur adipiscing elit. Mauris",
@@ -52,7 +56,7 @@ const WatchFeatures = () => {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

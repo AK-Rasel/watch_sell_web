@@ -60,10 +60,10 @@ const WatchAbout = () => {
         id="bg-div"
         className="bgImage w-full relative bg-cover bg-no-repeat bg-center bg-fixed"
       >
-        <div className="container mx-auto px-11">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {/* text */}
-          <div className="text-center md:w-[620px] mx-auto lg:pt-[200px] pt-24 ">
-            <h3 className="text-sm font-semibold md:mb-5 mb-2 text-text_hover_color ">
+          <div className="text-center md:w-[620px] mx-auto lg:pt-[200px] pt-24">
+            <h3 className="text-sm font-semibold md:mb-5 mb-2 text-text_hover_color">
               ABOUT OUR WATCHES
             </h3>
             <h2 className="xl:text-5xl lg:text-[2.75rem] md:text-4xl text-3xl leading-tight md:font-black font-extrabold text-secondary_background_color">
@@ -73,7 +73,7 @@ const WatchAbout = () => {
               Design
               <br /> and Performance
             </h2>
-            <p className="md:text-lg text-base md:my-10  my-5 text-wrap">
+            <p className="md:text-lg text-base md:my-10 my-5 text-wrap">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris
               vitae odales lectus, non ultrices nisi. In varius, leo non
               gravida.
@@ -85,11 +85,10 @@ const WatchAbout = () => {
               ref={swiperRef}
               onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
               watchSlidesProgress={true}
-              slidesPerView={3}
               breakpoints={{
-                640: {
+                0: {
                   slidesPerView: 1,
-                  spaceBetween: 20,
+                  spaceBetween: 10,
                 },
                 768: {
                   slidesPerView: 3,
@@ -123,13 +122,13 @@ const WatchAbout = () => {
                 </SwiperSlide>
               ))}
             </Swiper>
-            <div className="flex justify-start mt-8 gap-2">
+            <div className="flex lg:justify-start justify-center mt-8 gap-2">
               {watchVariety.map(
                 (_, index) =>
                   index % 3 === 0 && (
                     <span
                       key={index}
-                      className={`lg:h-2 lg:w-2 h-1 w-1 mx-1 rounded-full cursor-pointer ${
+                      className={`h-2 w-2  mx-1 rounded-full cursor-pointer ${
                         index === activeIndex
                           ? "bg-primary_color"
                           : "bg-primary_hover_color"

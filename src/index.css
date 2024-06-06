@@ -66,28 +66,40 @@
   transition: opacity 0.3s ease-in-out;
 }
 /* anim */
-/* right */
+@keyframes slideLeft {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideRight {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slide-left-img {
+  animation: slideLeft 1s ease-out;
+}
+
 .slide-right {
-  animation: 1.5s slide-right forwards;
+  animation: slideRight 1s ease-out;
 }
-@keyframes slide-right {
-  from {
-    margin-left: -100%;
-  }
-  to {
-    margin-right: 0%;
-  }
-}
-/* left */
+
 .slide-left {
-  animation: 1.5s slide-left forwards;
+  animation: slideLeft 1s ease-out;
 }
-@keyframes slide-left {
-  from {
-    margin-right: -100%;
-  }
-  to {
-    margin-left: 0%;
-  }
+
+.absolute {
+  position: absolute;
 }
-/* left */

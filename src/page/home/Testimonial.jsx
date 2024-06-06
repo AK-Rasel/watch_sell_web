@@ -38,15 +38,15 @@ function Testimonial() {
   };
 
   return (
-    <section className="bgImage2 bg-no-repeat h-full w-full">
+    <section className=" bgImage2 bg-no-repeat bg-cover bg-right ">
       <div className="container mx-auto py-20">
         {/* Title */}
-        <div className="text-center md:w-[620px] mx-auto py-24 ">
-          <h2 className="xl:text-5xl lg:text-[2.75rem]  md:text-4xl text-3xl  md:font-black font-extrabold text-secondary_background_color ">
+        <div className="text-center md:w-[620px] mx-auto py-24">
+          <h2 className="xl:text-5xl lg:text-[2.75rem] text-4xl  md:font-black font-extrabold text-secondary_background_color">
             What our <br /> customers say
           </h2>
         </div>
-        {/* slider */}
+        {/* Slider */}
         <div className="relative">
           <Swiper ref={swiperRef} loop className="mySwiper">
             {clintTestimonial.map((testimonial, index) => (
@@ -57,11 +57,11 @@ function Testimonial() {
                     src={testimonial.img}
                     alt={testimonial.name}
                   />
-                  <div className="text-center  mx-80">
-                    <p className=" text-lg text-text_hover_color">
+                  <div className="text-center mx-4 md:mx-20 lg:mx-40 xl:mx-80">
+                    <p className="text-lg text-text_hover_color">
                       {testimonial.description}
                     </p>
-                    <p className=" text-xl my-7 font-extrabold text-primary_color">
+                    <p className="text-xl my-7 font-extrabold text-primary_color">
                       {testimonial.name}
                     </p>
                     <p className="text-sm sm:text-base text-text_hover_color md:text-lg lg:text-xl xl:text-2xl">
@@ -74,15 +74,15 @@ function Testimonial() {
           </Swiper>
           <button
             onClick={handlePrev}
-            className="absolute top-3  left-[35%]   p-2 z-20"
+            className="absolute top-3 left-[20%] md:left-[35%] p-2 z-20"
           >
-            <GrPrevious className="hover:text-white  text-4xl   text-primary_hover_color " />
+            <GrPrevious className="hover:text-white text-4xl text-primary_hover_color" />
           </button>
           <button
             onClick={handleNext}
-            className="absolute top-3  right-[35%]  p-2 z-20"
+            className="absolute top-3 right-[20%] md:right-[35%] p-2 z-20"
           >
-            <GrNext className="hover:text-white  text-4xl   text-primary_hover_color " />
+            <GrNext className="hover:text-white text-4xl text-primary_hover_color" />
           </button>
         </div>
       </div>
