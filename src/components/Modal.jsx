@@ -79,13 +79,13 @@ const Modal = ({ show, onClose, images, initialIndex }) => {
       </button>
       <button
         onClick={handlePrev}
-        className="absolute bottom-8 md:top-1/2 md:-translate-y-1/2 left-4 z-50 p-2 border-2 border-white rounded-full text-2xl text-white"
+        className="absolute md:bottom-auto bottom-8 md:top-1/2 md:-translate-y-1/2 left-4 z-50 p-2 border-2 border-white rounded-full text-2xl text-white"
       >
         <GrPrevious />
       </button>
       <button
         onClick={handleNext}
-        className="absolute bottom-8 md:top-1/2 md:-translate-y-1/2 right-4 z-50 p-2 border-2 border-white rounded-full text-2xl text-white"
+        className="absolute md:bottom-auto bottom-8 md:top-1/2 md:-translate-y-1/2 right-4 z-50 p-2 border-2 border-white rounded-full text-2xl text-white"
       >
         <GrNext />
       </button>

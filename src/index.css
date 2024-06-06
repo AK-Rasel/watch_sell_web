@@ -99,7 +99,3 @@
 .slide-left {
   animation: slideLeft 1s ease-out;
 }
-
-.absolute {
-  position: absolute;
-}

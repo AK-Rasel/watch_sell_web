@@ -3,7 +3,7 @@ import { CiMicrophoneOn } from "react-icons/ci";
 
 const FeaturesContact = ({ icon, title, docs }) => {
   return (
-    <div className="flex  justify-start">
+    <div className="flex gap-4 md:gap-0 justify-start">
       {/* icon */}
       <div className="w-[10%] mx-auto flex ">{icon}</div>
       {/* text */}
