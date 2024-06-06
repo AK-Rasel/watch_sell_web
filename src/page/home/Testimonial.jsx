@@ -38,7 +38,7 @@ function Testimonial() {
   };
 
   return (
-    <section className=" bgImage2 bg-no-repeat bg-cover bg-right ">
+    <section id="reviews" className=" bgImage2 bg-no-repeat bg-cover bg-right ">
       <div className="container mx-auto py-20">
         {/* Title */}
         <div className="text-center md:w-[620px] mx-auto py-24">

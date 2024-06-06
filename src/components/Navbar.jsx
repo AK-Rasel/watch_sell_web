@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { PiShoppingCart } from "react-icons/pi";
-import { SlMenu } from "react-icons/sl";
 import { RiCloseLargeFill } from "react-icons/ri";
+import { SlMenu } from "react-icons/sl";
+import { PiShoppingCart } from "react-icons/pi";
 import { FaSearch } from "react-icons/fa";
 
 const navLinks = [
-  { name: "Home", navPath: "/" },
-  { name: "Gallery", navPath: "/" },
-  { name: "Features", navPath: "/" },
-  { name: "Reviews", navPath: "/" },
-  { name: "Shop", navPath: "/" },
+  { name: "Home", navPath: "#home" },
+  { name: "Gallery", navPath: "#gallery" },
+  { name: "Features", navPath: "#features" },
+  { name: "Reviews", navPath: "#reviews" },
+  { name: "Shop", navPath: "#shop" },
 ];
 
 const Navbar = () => {
@@ -52,6 +52,32 @@ const Navbar = () => {
     }
   };
 
+  useEffect(() => {
+    const handleSmoothScroll = (event) => {
+      event.preventDefault(); // Prevent default jump-to behavior
+      const targetId = event.target.getAttribute("href"); // Get target section ID
+      const targetSection = document.querySelector(targetId);
+      if (targetSection) {
+        const offsetTop = targetSection.getBoundingClientRect().top;
+        window.scrollTo({
+          top: offsetTop + window.scrollY, // Calculate section position
+          behavior: "smooth",
+        });
+      }
+    };
+
+    const navLinks = document.querySelectorAll(".smooth-scroll");
+    navLinks.forEach((link) => {
+      link.addEventListener("click", handleSmoothScroll);
+    });
+
+    return () => {
+      navLinks.forEach((link) => {
+        link.removeEventListener("click", handleSmoothScroll);
+      });
+    };
+  }, []); // Run once after component mounts
+
   return (
     <header className="w-full fixed top-0 right-0 z-50">
       <nav
@@ -80,7 +106,9 @@ const Navbar = () => {
                     isSticky ? "text-secondary_color" : "text-text_white"
                   }`}
                 >
-                  <Link to={navItem.navPath}>{navItem.name}</Link>
+                  <a href={navItem.navPath} className="smooth-scroll">
+                    {navItem.name}
+                  </a>
                 </li>
               ))}
             </ul>

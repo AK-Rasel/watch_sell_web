@@ -55,7 +55,7 @@ const WatchAbout = () => {
   };
 
   return (
-    <section>
+    <section id="gallery">
       <div
         id="bg-div"
         className="bgImage w-full relative bg-cover bg-no-repeat bg-center bg-fixed"

@@ -8,7 +8,10 @@ import { FiWifi } from "react-icons/fi";
 
 const WatchFeatures = () => {
   return (
-    <section className="container mx-auto my-20 px-4 sm:px-6 lg:px-8">
+    <section
+      id="features"
+      className="container mx-auto my-20 px-4 sm:px-6 lg:px-8"
+    >
       <div className="flex lg:flex-row flex-col justify-center lg:justify-end items-center w-full gap-12 lg:gap-24">
         <div className="w-full lg:w-1/2 md:px-0 px-10 flex justify-center mb-4">
           <img

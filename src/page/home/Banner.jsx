@@ -4,7 +4,10 @@ import bigRing from "../../assets/Home/backgroundBiglEllipse.png";
 
 const Banner = () => {
   return (
-    <section className=" bg-secondary_color  lg:max-h-none max-h-[90vh] overflow-hidden">
+    <section
+      id="home"
+      className=" bg-secondary_color  lg:max-h-none max-h-[90vh] overflow-hidden"
+    >
       <div className="md:w-full relative xl:w-[1440px] mx-auto md:mt-6 mt-36 px-7">
         <div className="flex  flex-col lg:flex-row  lg:px-14 xl:px-0 justify-end w-full items-center relative lg:pt-[89px] md:pt-[100px] z-10 text-center lg:text-start">
           {/* text */}
