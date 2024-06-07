@@ -7,11 +7,11 @@ import { PiShoppingCart } from "react-icons/pi";
 import { FaSearch } from "react-icons/fa";
 
 const navLinks = [
-  { name: "Home", navPath: "/" },
-  { name: "Gallery", navPath: "/" },
-  { name: "Features", navPath: "/" },
-  { name: "Reviews", navPath: "/" },
-  { name: "Shop", navPath: "/shop" },
+  { name: "Home", navPath: "/", sectionId: "#home" },
+  { name: "Gallery", navPath: "/", sectionId: "#gallery" },
+  { name: "Features", navPath: "/", sectionId: "#features" },
+  { name: "Reviews", navPath: "/", sectionId: "#reviews" },
+  { name: "Shop", navPath: "/shop", sectionId: null },
 ];
 
 const Navbar = () => {
@@ -49,7 +49,6 @@ const Navbar = () => {
     if (isToggleMenu) {
       setIsClosing(true);
       setTimeout(() => {
-        // window.scrollTo({ top: 0, behavior: "smooth" });
         setIsToggleMenu(false);
         setIsClosing(false);
       }, 500);
@@ -121,91 +120,34 @@ const Navbar = () => {
     }
   }, [location]);
 
-  const nave = (
-    <>
-      <li
-        className={`text-base font-bold hover:duration-300 hover:underline transition-all antialiased hover:text-[#828282] ${
-          isSticky
-            ? "text-secondary_color"
-            : currentPath === "/shop"
-            ? "text-secondary_background_color"
-            : "text-text_white"
-        }`}
-      >
-        <a
-          className="smooth-scroll"
-          href="#home"
-          onClick={(e) => handleNavigation(e, "/", "#home")}
-        >
-          Home
-        </a>
-      </li>
-      <li
-        className={`text-base font-bold hover:duration-300 hover:underline transition-all antialiased hover:text-[#828282] ${
-          isSticky
-            ? "text-secondary_color"
-            : currentPath === "/shop"
-            ? "text-secondary_background_color"
-            : "text-text_white"
-        }`}
-      >
-        <a
-          className="smooth-scroll"
-          href="#gallery"
-          onClick={(e) => handleNavigation(e, "/", "#gallery")}
-        >
-          Gallery
-        </a>
-      </li>
-      <li
-        className={`text-base font-bold hover:duration-300 hover:underline transition-all antialiased hover:text-[#828282] ${
-          isSticky
-            ? "text-secondary_color"
-            : currentPath === "/shop"
-            ? "text-secondary_background_color"
-            : "text-text_white"
-        }`}
-      >
-        <a
-          className="smooth-scroll"
-          href="#features"
-          onClick={(e) => handleNavigation(e, "/", "#features")}
-        >
-          Features
-        </a>
-      </li>
-      <li
-        className={`text-base font-bold hover:duration-300 hover:underline transition-all antialiased hover:text-[#828282] ${
-          isSticky
-            ? "text-secondary_color"
-            : currentPath === "/shop"
-            ? "text-secondary_background_color"
-            : "text-text_white"
-        }`}
-      >
-        <a
-          className="smooth-scroll"
-          href="#reviews"
-          onClick={(e) => handleNavigation(e, "/", "#reviews")}
-        >
-          Reviews
-        </a>
-      </li>
-      <li
-        className={`text-base font-bold hover:duration-300 hover:underline transition-all antialiased hover:text-[#828282] ${
-          isSticky
-            ? "text-secondary_color"
-            : currentPath === "/shop"
-            ? "text-secondary_background_color"
-            : "text-text_white"
-        }`}
-      >
-        <Link onClick={topScroll} to="/shop">
-          Shop
+  const navLinksJSX = navLinks.map((navItem, index) => (
+    <li
+      key={index}
+      className={`text-base font-bold hover:duration-300 hover:underline transition-all antialiased hover:text-[#828282] ${
+        isSticky
+          ? "text-secondary_color"
+          : currentPath === "/shop"
+          ? "text-secondary_background_color"
+          : "text-text_white"
+      }`}
+    >
+      {navItem.name === "Shop" ? (
+        <Link onClick={topScroll} to={navItem.navPath}>
+          {navItem.name}
         </Link>
-      </li>
-    </>
-  );
+      ) : (
+        <a
+          className="smooth-scroll"
+          href={navItem.sectionId}
+          onClick={(e) =>
+            handleNavigation(e, navItem.navPath, navItem.sectionId)
+          }
+        >
+          {navItem.name}
+        </a>
+      )}
+    </li>
+  ));
 
   return (
     <header className="w-full fixed top-0 right-0 z-50">
@@ -231,7 +173,7 @@ const Navbar = () => {
             </Link>
           </h1>
           <div className="hidden lg:block">
-            <ul className="flex items-center gap-8">{nave}</ul>
+            <ul className="flex items-center gap-8">{navLinksJSX}</ul>
           </div>
           <div className="flex items-center justify-center lg:gap-10">
             <span className="lg:hidden">
@@ -279,12 +221,12 @@ const Navbar = () => {
                 >
                   <Link
                     onClick={(e) =>
-                      navItem.name.toLowerCase() === "shop"
+                      navItem.name === "Shop"
                         ? toggleMenu()
                         : handleNavigation(
                             e,
-                            "/",
-                            `#${navItem.name.toLowerCase()}`
+                            navItem.navPath,
+                            navItem.sectionId
                           )
                     }
                     to={navItem.navPath}
