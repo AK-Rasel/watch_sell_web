@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { RiCloseLargeFill } from "react-icons/ri";
 import { SlMenu } from "react-icons/sl";
 import { PiShoppingCart } from "react-icons/pi";
 import { FaSearch } from "react-icons/fa";
 
 const navLinks = [
-  { name: "Home", navPath: "#home" },
-  { name: "Gallery", navPath: "#gallery" },
-  { name: "Features", navPath: "#features" },
-  { name: "Reviews", navPath: "#reviews" },
-  { name: "Shop", navPath: "#shop" },
+  { name: "Home", navPath: "/" },
+  { name: "Gallery", navPath: "/" },
+  { name: "Features", navPath: "/" },
+  { name: "Reviews", navPath: "/" },
+  { name: "Shop", navPath: "/shop" },
 ];
 
 const Navbar = () => {
   const [isSticky, setSticky] = useState(false);
   const [isToggleMenu, setIsToggleMenu] = useState(false);
+  const [yScrollSet, setYScrollSet] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
@@ -44,6 +45,7 @@ const Navbar = () => {
     if (isToggleMenu) {
       setIsClosing(true);
       setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
         setIsToggleMenu(false);
         setIsClosing(false);
       }, 500);
@@ -51,7 +53,12 @@ const Navbar = () => {
       setIsToggleMenu(true);
     }
   };
-
+  const topScroll = () => {
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, 500);
+  };
+  // smooth not scroll work to do
   useEffect(() => {
     const handleSmoothScroll = (event) => {
       event.preventDefault(); // Prevent default jump-to behavior
@@ -81,6 +88,14 @@ const Navbar = () => {
     };
   }, []); // Run once after component mounts
 
+  const [currentPath, setCurrentPath] = useState("");
+
+  const location = useLocation();
+
+  useEffect(() => {
+    setCurrentPath(location.pathname);
+  }, [location]);
+
   return (
     <header className="w-full fixed top-0 right-0 z-50">
       <nav
@@ -93,7 +108,11 @@ const Navbar = () => {
         <div className="flex justify-between items-center">
           <h1
             className={`font-bold text-3xl uppercase ${
-              isSticky ? "text-secondary_color" : "text-text_white"
+              isSticky
+                ? "text-secondary_color"
+                : currentPath === "/shop"
+                ? "text-secondary_background_color"
+                : "text-text_white"
             }`}
           >
             <Link to="/">
@@ -107,12 +126,22 @@ const Navbar = () => {
                 <li
                   key={index}
                   className={`text-base font-bold hover:duration-300 hover:underline transition-all antialiased hover:text-[#828282] ${
-                    isSticky ? "text-secondary_color" : "text-text_white"
+                    isSticky
+                      ? "text-secondary_color"
+                      : currentPath === "/shop"
+                      ? "text-secondary_background_color"
+                      : "text-text_white"
                   }`}
                 >
-                  <a href={navItem.navPath} className="smooth-scroll">
+                  <Link
+                    to={navItem.navPath}
+                    onClick={topScroll}
+                    // className={`${
+                    //   navItem.navPath !== "/shop" ? "smooth-scroll" : ""
+                    // }`}
+                  >
                     {navItem.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -161,13 +190,13 @@ const Navbar = () => {
                   key={index}
                   className="text-sm font-normal hover:duration-300 hover:underline transition-all antialiased hover:text-[#828282] text-white py-2"
                 >
-                  <a
+                  <Link
                     onClick={toggleMenu}
-                    href={navItem.navPath}
-                    className="smooth-scrollMobile"
+                    to={navItem.navPath}
+                    // className="smooth-scrollMobile"
                   >
                     {navItem.name}
-                  </a>
+                  </Link>
                   {navItem.name === "Shop" ? (
                     ""
                   ) : (
