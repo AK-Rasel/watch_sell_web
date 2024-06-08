@@ -21,6 +21,18 @@ const Navbar = () => {
   const [isToggleMenu, setIsToggleMenu] = useState(false);
   const [currentPath, setCurrentPath] = useState("");
   const [isClosing, setIsClosing] = useState(false);
+  // remove local stor---smart
+  useEffect(() => {
+    const handleRouteChange = () => {
+      if (currentPath === "/") {
+        localStorage.removeItem("sortOrder");
+      }
+    };
+
+    handleRouteChange(); // check initially
+    return () => handleRouteChange(); // clean up when the component unmounts
+  }, [currentPath]);
+  // remove local stor---end
 
   useEffect(() => {
     const handleScroll = () => {

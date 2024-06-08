@@ -9,7 +9,8 @@ import Lemonade from "../../assets/shop/Watch3-300x300.jpg";
 import Purple from "../../assets/shop/Watch2-300x300.jpg";
 import SkyBlue from "../../assets/shop/Watch7-300x300.jpg";
 import White from "../../assets/shop/Watch1-300x300.jpg";
-import { data } from "autoprefixer";
+import { useNavigate, useLocation } from "react-router-dom";
+
 const productData = [
   {
     _id: "2",
@@ -94,33 +95,43 @@ const productData = [
 ];
 
 const Shop = () => {
-  const [sortOrder, setSortOrder] = useState("default");
-  const [products, setProducts] = useState(productData);
+  const [sortOrder, setSortOrder] = useState(
+    localStorage.getItem("sortOrder") || "default"
+  ); // input data and localStorage set--------------------------------------------------
+  const [products, setProducts] = useState(productData); //set data backEnd
+  const [loading, setLoading] = useState(false); //loading state
+
+  useEffect(() => {
+    if (sortOrder !== "default") {
+      sortProducts(sortOrder, productData);
+    }
+  }, [sortOrder]);
 
   const handleSortingChange = (e) => {
     const sortValue = e.target.value;
     setSortOrder(sortValue);
+    localStorage.setItem("sortOrder", sortValue); //set local store
+    setLoading(true);
+    setTimeout(() => {
+      sortProducts(sortValue, products);
+      setLoading(false);
+    }, 500); // Simulate a delay for loading indicator
+  };
+  // sort logic---------------------------
+  const sortProducts = (sortValue, products) => {
     let sortedProducts = [...products];
     if (sortValue === "price-high-to-low") {
-      sortedProducts.sort((a, b) => {
-        return b.price - a.price;
-      });
+      sortedProducts.sort((a, b) => b.price - a.price);
     } else if (sortValue === "price-low-to-high") {
-      sortedProducts.sort((a, b) => {
-        return a.price - b.price;
-      });
+      sortedProducts.sort((a, b) => a.price - b.price);
     } else if (sortValue === "average-rating") {
-      sortedProducts.sort((a, b) => {
-        return b.rating - a.rating;
-      });
+      sortedProducts.sort((a, b) => b.rating - a.rating);
     } else if (sortValue === "popularity") {
-      sortedProducts.sort((a, b) => {
-        return b.sales - a.sales;
-      });
+      sortedProducts.sort((a, b) => b.sales - a.sales);
     } else if (sortValue === "latest") {
-      sortedProducts.sort((a, b) => {
-        return new Date(b.releaseDate) - new Date(a.releaseDate);
-      });
+      sortedProducts.sort(
+        (a, b) => new Date(b.releaseDate) - new Date(a.releaseDate)
+      );
     } else {
       sortedProducts = productData;
     }
@@ -128,43 +139,44 @@ const Shop = () => {
   };
 
   return (
-    <section className=" mt-32  ">
+    <section className="mt-32">
       <div className="bg-text_white py-24 text-center">
-        {/* banner */}
         <ShopBanner />
-        {/* banner*-- end */}
       </div>
-      {/* All Shop */}
       <div className="container mx-auto my-36">
-        <div className=" mb-20 flex md:justify-between flex-col-reverse md:flex-row justify-center items-center lg:px-0 px-[75px]">
+        <div className="mb-20 flex md:justify-between flex-col-reverse md:flex-row justify-center items-center lg:px-0 px-[75px]">
           <form className="w-full">
             <select
               onChange={handleSortingChange}
               value={sortOrder}
-              className="appearance-none  block w-full px-4 py-3 max-w-sm text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-offset-text_hover_color "
+              className="appearance-none block w-full px-4 py-3 max-w-sm text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-offset-text_hover_color"
             >
               <option value="default">Default Sorting</option>
               <option value="popularity">Sort by popularity</option>
               <option value="average-rating">Sort by average rating</option>
               <option value="latest">Sort by latest</option>
               <option value="price-low-to-high">
-                Sort by price :low to high
+                Sort by price: low to high
               </option>
               <option value="price-high-to-low">
-                Sort by price : high to low
+                Sort by price: high to low
               </option>
             </select>
           </form>
-          <p className="text-base w-full md:text-end mb-6 md:mb-0 text-center font-medium text-[#8D8698] ">
+          <p className="text-base w-full md:text-end mb-6 md:mb-0 text-center font-medium text-[#8D8698]">
             Showing all 8 results
           </p>
         </div>
-        {/* card */}
-        <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-9 lg:px-0  px-10">
-          {products?.map((product) => {
-            return <ShopCard key={product._id} product={product} />;
-          })}
-        </div>
+        {loading ? (
+          <div className="loading-indicator">Loading...</div>
+        ) : (
+          <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-9 lg:px-0 px-10">
+            {Array.isArray(products) &&
+              products.map((product) => (
+                <ShopCard key={product._id} product={product} />
+              ))}
+          </div>
+        )}
       </div>
     </section>
   );
