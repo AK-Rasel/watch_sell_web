@@ -5,6 +5,7 @@ import { RiCloseFill } from "react-icons/ri";
 import { SlMenu } from "react-icons/sl";
 import { PiShoppingCart } from "react-icons/pi";
 import { FaSearch } from "react-icons/fa";
+import useCarts from "../hooks/useCarts";
 
 const navLinks = [
   { name: "Home", navPath: "/", sectionId: "#home" },
@@ -17,6 +18,8 @@ const navLinks = [
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [allCarts] = useCarts();
+
   const [isSticky, setSticky] = useState(false);
   const [isToggleMenu, setIsToggleMenu] = useState(false);
   const [currentPath, setCurrentPath] = useState("");
@@ -161,6 +164,12 @@ const Navbar = () => {
     </li>
   ));
 
+  const lengthCarts = Array.isArray(allCarts)
+    ? allCarts.reduce((acc, cart) => {
+        return acc + (cart.quantity || 0);
+      }, 0)
+    : 0;
+
   return (
     <header className="w-full fixed top-0 right-0 z-50">
       <nav
@@ -207,7 +216,7 @@ const Navbar = () => {
             </span>
             <div className="relative pl-4">
               <div className="bg-primary_color w-5 h-5 flex justify-center items-center p-1 rounded-lg absolute -top-2 -right-2 text-text_white font-bold text-sm">
-                0
+                {lengthCarts}
               </div>
               <PiShoppingCart className="text-2xl font-bold text-[#A07EB5]" />
             </div>

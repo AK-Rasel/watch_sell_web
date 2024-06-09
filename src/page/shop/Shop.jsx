@@ -8,10 +8,12 @@ import toast from "react-hot-toast";
 import { RiCloseFill } from "react-icons/ri";
 import {} from "react-dom";
 import { Link } from "react-router-dom";
+import useCarts from "../../hooks/useCarts";
 
 const Shop = () => {
   const [allProducts] = useProducts();
   const axiosPublic = useAxiosPublic();
+  const [_, refetch] = useCarts();
 
   const [sortOrder, setSortOrder] = useState(
     localStorage.getItem("sortOrder") || "default"
@@ -24,6 +26,7 @@ const Shop = () => {
       setProducts(allProducts);
     }
   }, [allProducts]);
+
   useEffect(() => {
     if (sortOrder !== "default") {
       sortProducts(sortOrder, allProducts);
@@ -64,6 +67,7 @@ const Shop = () => {
   const handelCart = async (item) => {
     // console.log(id);
     const { _id: id, colorName, productInformation, price, img } = item;
+    // idem
     const cartItem = {
       colorName,
       productInformation,
@@ -71,11 +75,14 @@ const Shop = () => {
       img,
       quantity: 1,
     };
-    console.log(cartItem);
+
     try {
       const res = await axiosPublic.put(`/cart/${id}`, cartItem);
       if (res.status === 200) {
         // console.log(res.data.message);
+        refetch();
+        // tost------------------------------------------
+
         toast.custom((t) => (
           <div
             className={`${
