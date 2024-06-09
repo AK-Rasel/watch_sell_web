@@ -1,111 +1,34 @@
 import React, { useEffect, useState } from "react";
 import ShopBanner from "../../components/ShopBanner";
 import ShopCard from "../../components/ShopCard";
-import Golden from "../../assets/shop/Watch6-300x300.jpg";
-import Black from "../../assets/shop/Watch4-300x300.jpg";
-import Pink from "../../assets/shop/Watch8-300x300.jpg";
-import Green from "../../assets/shop/Watch5-300x300.jpg";
-import Lemonade from "../../assets/shop/Watch3-300x300.jpg";
-import Purple from "../../assets/shop/Watch2-300x300.jpg";
-import SkyBlue from "../../assets/shop/Watch7-300x300.jpg";
-import White from "../../assets/shop/Watch1-300x300.jpg";
-import { useNavigate, useLocation } from "react-router-dom";
 
-const productData = [
-  {
-    _id: "2",
-    itemName: "Golden Sunset",
-    additionalInformation: "STRAP",
-    price: 55,
-    img: Golden,
-    rating: 4,
-    sales: 150,
-    releaseDate: "2023-05-01",
-  },
-  {
-    _id: "3",
-    itemName: "Charcoal Black",
-    additionalInformation: "body",
-    price: 51,
-    img: Black,
-    rating: 5,
-    sales: 200,
-    releaseDate: "2023-01-15",
-  },
-  {
-    _id: "6",
-    itemName: "Light Pink",
-    additionalInformation: "STRAP",
-    price: 57,
-    img: Pink,
-    rating: 3,
-    sales: 90,
-    releaseDate: "2023-03-10",
-  },
-  {
-    _id: "8",
-    itemName: "Mint Green",
-    additionalInformation: "STRAP",
-    price: 59,
-    img: Green,
-    rating: 4,
-    sales: 180,
-    releaseDate: "2023-06-01",
-  },
-  {
-    _id: "10",
-    itemName: "Pink Lemonade",
-    additionalInformation: "STRAP",
-    price: 60,
-    img: Lemonade,
-    rating: 2,
-    sales: 120,
-    releaseDate: "2023-01-20",
-  },
-  {
-    _id: "12",
-    itemName: "Purple Berry",
-    additionalInformation: "STRAP",
-    price: 78,
-    img: Purple,
-    rating: 5,
-    sales: 170,
-    releaseDate: "2023-02-15",
-  },
-  {
-    _id: "14",
-    itemName: "Sky Blue",
-    additionalInformation: "STRAP",
-    price: 210,
-    img: SkyBlue,
-    rating: 1,
-    sales: 60,
-    releaseDate: "2022-12-10",
-  },
-  {
-    _id: "16",
-    itemName: "Snow White",
-    additionalInformation: "STRAP",
-    price: 72,
-    img: White,
-    rating: 4,
-    sales: 140,
-    releaseDate: "2023-07-01",
-  },
-];
+import useProducts from "../../hooks/useProducts";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
+import toast from "react-hot-toast";
+import { RiCloseFill } from "react-icons/ri";
+import {} from "react-dom";
+import { Link } from "react-router-dom";
 
 const Shop = () => {
+  const [allProducts] = useProducts();
+  const axiosPublic = useAxiosPublic();
+
   const [sortOrder, setSortOrder] = useState(
     localStorage.getItem("sortOrder") || "default"
   ); // input data and localStorage set--------------------------------------------------
-  const [products, setProducts] = useState(productData); //set data backEnd
+  const [products, setProducts] = useState(allProducts); //set data backEnd
   const [loading, setLoading] = useState(false); //loading state
 
   useEffect(() => {
-    if (sortOrder !== "default") {
-      sortProducts(sortOrder, productData);
+    if (allProducts.length > 0) {
+      setProducts(allProducts);
     }
-  }, [sortOrder]);
+  }, [allProducts]);
+  useEffect(() => {
+    if (sortOrder !== "default") {
+      sortProducts(sortOrder, allProducts);
+    }
+  }, [sortOrder, allProducts]);
 
   const handleSortingChange = (e) => {
     const sortValue = e.target.value;
@@ -133,11 +56,66 @@ const Shop = () => {
         (a, b) => new Date(b.releaseDate) - new Date(a.releaseDate)
       );
     } else {
-      sortedProducts = productData;
+      sortedProducts = allProducts;
     }
     setProducts(sortedProducts);
   };
-
+  // add cart--------------------------------function
+  const handelCart = async (item) => {
+    // console.log(id);
+    const { _id: id, colorName, productInformation, price, img } = item;
+    const cartItem = {
+      colorName,
+      productInformation,
+      price,
+      img,
+      quantity: 1,
+    };
+    console.log(cartItem);
+    try {
+      const res = await axiosPublic.put(`/cart/${id}`, cartItem);
+      if (res.status === 200) {
+        // console.log(res.data.message);
+        toast.custom((t) => (
+          <div
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-xl w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+          >
+            <div className="flex-1 w-0 p-4">
+              <div className="flex items-start">
+                <div className="ml-3 flex-1 gap-5 grid">
+                  <p className="text-lg font-medium text-gray-900">
+                    <span className="font-bold text-base">{colorName}</span>has
+                    been added to the cart.
+                    <span>
+                      {" "}
+                      <a
+                        href="/"
+                        className="font-bold text-primary_color text-lg font-Poppins"
+                      >
+                        Show Cart
+                      </a>
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="flex border-l border-gray-200">
+              <button
+                onClick={() => toast.dismiss(t.id)}
+                className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center   text-text_hover_color  "
+              >
+                <RiCloseFill className="text-xl " />
+              </button>
+            </div>
+          </div>
+        ));
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <section className="mt-32">
       <div className="bg-text_white py-24 text-center">
@@ -173,7 +151,11 @@ const Shop = () => {
           <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-9 lg:px-0 px-10">
             {Array.isArray(products) &&
               products.map((product) => (
-                <ShopCard key={product._id} product={product} />
+                <ShopCard
+                  key={product._id}
+                  product={product}
+                  handelCart={handelCart}
+                />
               ))}
           </div>
         )}
