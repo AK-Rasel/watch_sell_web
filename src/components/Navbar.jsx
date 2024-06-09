@@ -6,7 +6,8 @@ import { SlMenu } from "react-icons/sl";
 import { PiShoppingCart } from "react-icons/pi";
 import { FaSearch } from "react-icons/fa";
 import useCarts from "../hooks/useCarts";
-
+import { AiOutlineClose } from "react-icons/ai";
+import useAxiosPublic from "../hooks/useAxiosPublic";
 const navLinks = [
   { name: "Home", navPath: "/", sectionId: "#home" },
   { name: "Gallery", navPath: "/", sectionId: "#gallery" },
@@ -18,8 +19,13 @@ const navLinks = [
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [allCarts] = useCarts();
+  const [allCarts, refetch, isLoading] = useCarts();
+  const axiosPublic = useAxiosPublic();
 
+  const [isHovered, setIsHovered] = useState(false);
+  const [isMenuHovered, setIsMenuHovered] = useState(false);
+
+  const [isToggled, setIsToggled] = useState(false);
   const [isSticky, setSticky] = useState(false);
   const [isToggleMenu, setIsToggleMenu] = useState(false);
   const [currentPath, setCurrentPath] = useState("");
@@ -169,7 +175,35 @@ const Navbar = () => {
         return acc + (cart.quantity || 0);
       }, 0)
     : 0;
+  const totalPrice = Array.isArray(allCarts)
+    ? allCarts.reduce((acc, cart) => acc + cart.price * (cart.quantity || 0), 0)
+    : 0;
 
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  const handleMenuMouseEnter = () => {
+    setIsMenuHovered(true);
+  };
+
+  const handleMenuMouseLeave = () => {
+    setIsMenuHovered(false);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const res = await axiosPublic.delete(`/cart/${id}`);
+      refetch();
+      console.log(res);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <header className="w-full fixed top-0 right-0 z-50">
       <nav
@@ -197,7 +231,7 @@ const Navbar = () => {
             <ul className="flex items-center gap-8">{navLinksJSX}</ul>
           </div>
           <div className="flex items-center justify-center lg:gap-10">
-            <span className="lg:hidden">
+            <span className="lg:hidden mr-4">
               <button onClick={toggleMenu}>
                 {isToggleMenu ? (
                   <RiCloseFill
@@ -214,12 +248,86 @@ const Navbar = () => {
                 )}
               </button>
             </span>
-            <div className="relative pl-4">
-              <div className="bg-primary_color w-5 h-5 flex justify-center items-center p-1 rounded-lg absolute -top-2 -right-2 text-text_white font-bold text-sm">
-                {lengthCarts}
+            {/* cart for quantity ----------------------*/}
+            <div className="relative pb-6">
+              <Link
+                to="/cart"
+                className="relative w-full pl-4"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <div className="bg-primary_color group h-5 flex justify-center items-center p-1 rounded-lg absolute top-3 -right-2 text-text_white font-bold text-sm">
+                  {lengthCarts}
+                </div>
+                <PiShoppingCart
+                  className={`text-2xl font-bold text-[#A07EB5] cart-icon ${
+                    isHovered ? "open" : ""
+                  }`}
+                />
+              </Link>
+              <div
+                className={`absolute top-0 right-0 mt-12 bg-[#232323] shadow-lg rounded mobile-nav ${
+                  isHovered || isMenuHovered ? "open" : ""
+                }`}
+                onMouseEnter={handleMenuMouseEnter}
+                onMouseLeave={handleMenuMouseLeave}
+              >
+                <div className="w-96 ">
+                  <>
+                    {lengthCarts === 0 ? (
+                      <p className="p-4  text-text_hover_color">
+                        No products in the cart
+                      </p>
+                    ) : (
+                      <div>
+                        {allCarts.map((cart, index) => (
+                          <div className="flex p-4 " key={cart._id}>
+                            <div className="flex-shrink-0 w-16 h-12">
+                              <img className="w-full" src={cart.img} alt="" />
+                            </div>
+                            <div className="ml-3 flex-1">
+                              <p className="text-xl font-bold text-text_white">
+                                {cart.colorName}
+                              </p>
+                              <p className="mt-1 text-lg text-gray-500">
+                                {cart.quantity} x
+                                <span className="font-bold text-primary_color">
+                                  {" $" + cart.price}
+                                </span>
+                              </p>
+                            </div>
+                            {/* cancel-------------------------------- */}
+                            <div
+                              onClick={() => handleDelete(cart._id)}
+                              className="flex items-center"
+                            >
+                              <button className="w-full border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-text_white">
+                                <AiOutlineClose className="text-xl" />
+                              </button>
+                            </div>
+                            {/* --------------------------------------------- */}
+                          </div>
+                        ))}
+                        <div className="w-full text-center border-t border-gray-600 mt-4 ">
+                          <p className="text-lg text-text_white py-4">
+                            SUBTOTAL: $ {totalPrice.toFixed(2)}
+                          </p>
+                          <div className="flex  text-text_white font-medium text-lg items-center pt-4">
+                            <button className="w-1/2 mx-auto text-center py-4  border-t border-gray-600 border-r">
+                              View Cart
+                            </button>
+                            <button className="w-1/2 mx-auto text-center  border-t border-gray-600 py-4">
+                              Checkout
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                </div>
               </div>
-              <PiShoppingCart className="text-2xl font-bold text-[#A07EB5]" />
             </div>
+            {/* ---------------- */}
             <button className="hidden lg:block btn bg-primary_color px-8 hover:bg-primary_hover_color hover:duration-200 hover:transition-all text-white py-4 text-sm font-bold uppercase rounded-full">
               Login
             </button>

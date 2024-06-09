@@ -98,7 +98,7 @@ const Shop = () => {
                     <span>
                       {" "}
                       <a
-                        href="/"
+                        href="/cart"
                         className="font-bold text-primary_color text-lg font-Poppins"
                       >
                         Show Cart
