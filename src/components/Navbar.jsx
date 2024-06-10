@@ -282,7 +282,7 @@ const Navbar = () => {
                 />
               </Link>
               <div
-                className={`absolute top-0 right-0 mt-12 bg-[#232323] shadow-lg rounded mobile-nav ${
+                className={`absolute top-0 -right-16 mt-16 bg-[#232323] shadow-lg rounded mobile-nav ${
                   isHovered || isMenuHovered ? "open" : ""
                 }`}
                 onMouseEnter={handleMenuMouseEnter}

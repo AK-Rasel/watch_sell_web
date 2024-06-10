@@ -1,30 +1,69 @@
 import { useState } from "react";
 import CartProgress from "../../components/CartProgress";
 import ShopBanner from "../../components/ShopBanner";
-// import img from "../../assets/shop/Golden.jpg";
 import { IoArrowDown, IoArrowUp } from "react-icons/io5";
 import { PiCompass } from "react-icons/pi";
 import useCarts from "../../hooks/useCarts";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
+
 const Cart = () => {
   const [allCarts, refetch, isLoading] = useCarts();
-  const [quantity, setQuantity] = useState(1);
-  // const price = 25.5;
   const axiosPublic = useAxiosPublic();
-  const handleQuantityChange = (newQuantity) => {
-    if (newQuantity >= 1) {
-      setQuantity(newQuantity);
+
+  const handleQuantityChange = async (cart, newQuantity) => {
+    console.log(newQuantity);
+    const { _id: id, quantity } = cart;
+    try {
+      if (newQuantity >= 1) {
+        await axiosPublic.put(`/api/v1/cart/${id}`, {
+          quantity: newQuantity - quantity,
+        });
+        refetch();
+      }
+    } catch (error) {
+      console.error(error.message);
     }
   };
+
+  const handleQuantityUp = async (cart) => {
+    const { _id: id, quantity } = cart;
+    try {
+      await axiosPublic.put(`/cart/quantity/${id}`, { quantity: 1 });
+      refetch();
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  const handleQuantityDown = async (cart) => {
+    const { _id: id, quantity } = cart;
+    try {
+      if (quantity > 1) {
+        await axiosPublic.put(`/cart/quantity/${id}`, { quantity: -1 });
+        refetch();
+      } else {
+        await handleDelete(id);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
   const handleDelete = async (id) => {
     try {
-      const res = await axiosPublic.delete(`/cart/${id}`);
+      await axiosPublic.delete(`/cart/${id}`);
       refetch();
-      console.log(res);
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
+
+  const calculateTotal = () => {
+    return allCarts
+      .reduce((total, cart) => total + cart.price * cart.quantity, 0)
+      .toFixed(2);
+  };
+
   return (
     <section className="mt-32 mb-16">
       {/* banner------------start */}
@@ -41,15 +80,11 @@ const Cart = () => {
           primaryLiteText3={"text-primary_hover_color"}
         />
         {/* progress ----------end */}
-        {/* ------------ */}
-
-        {/*  */}
-        {/* Table ---------------- start */}
 
         {allCarts.length === 0 ? (
-          <div className="container mx-auto p-4 flex flex-col  justify-start  ">
-            <div className="bg-gray-100 p-4 rounded shadow-md w-full ">
-              <div className="flex  justify-start gap-4">
+          <div className="container mx-auto p-4 flex flex-col  justify-start">
+            <div className="bg-gray-100 p-4 rounded shadow-md w-full">
+              <div className="flex justify-start gap-4">
                 <PiCompass className="text-3xl" />
                 <div>
                   <h2 className="text-gray-700 text-xl font-bold">
@@ -83,11 +118,11 @@ const Cart = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {allCarts?.map((carts) => {
-                    const { _id, img, price, colorName, quantity } = carts;
+                  {allCarts?.map((cart) => {
+                    const { _id, img, price, colorName, quantity } = cart;
                     return (
                       <tr key={_id} className="border-x border-b">
-                        <td className="py-2 px-4 text-center border ">
+                        <td className="py-2 px-4 text-center border">
                           <button
                             onClick={() => handleDelete(_id)}
                             className="text-text_hover_color text-2xl"
@@ -95,11 +130,11 @@ const Cart = () => {
                             X
                           </button>
                         </td>
-                        <td className=" flex items-center justify-center   py-8 ">
+                        <td className="flex items-center justify-center py-8">
                           <img
                             src={img}
                             alt="Product"
-                            className="w-24 h-24 object-cover mr-4 "
+                            className="w-24 h-24 object-cover mr-4"
                           />
                         </td>
                         <td className="border-x text-center py-8">
@@ -108,11 +143,10 @@ const Cart = () => {
                         <td className="text-center border-r">
                           £{price.toFixed(2)}
                         </td>
-
-                        <td className="  text-center ">
+                        <td className="text-center">
                           <button
                             className="p-5 mr-6 bg-slate-100 rounded-full"
-                            onClick={() => handleQuantityChange(quantity - 1)}
+                            onClick={() => handleQuantityDown(cart)}
                           >
                             <IoArrowDown className="text-xl text-slate-600" />
                           </button>
@@ -120,13 +154,16 @@ const Cart = () => {
                             type="text"
                             value={quantity}
                             onChange={(e) =>
-                              handleQuantityChange(parseInt(e.target.value))
+                              handleQuantityChange(
+                                cart,
+                                parseInt(e.target.value)
+                              )
                             }
-                            className="w-14 text-center text-xl text-slate-600 "
+                            className="w-14 text-center text-xl text-slate-600"
                           />
                           <button
-                            onClick={() => handleQuantityChange(quantity + 1)}
-                            className="p-5 ml-6  bg-slate-100 rounded-full"
+                            onClick={() => handleQuantityUp(cart)}
+                            className="p-5 ml-6 bg-slate-100 rounded-full"
                           >
                             <IoArrowUp className="text-xl text-slate-600" />
                           </button>
@@ -140,19 +177,23 @@ const Cart = () => {
                 </tbody>
               </table>
             </div>
-            <div className=" flex justify-between items-center mt-10">
+            <div className="flex justify-between items-center mt-10">
               <div className="w-1/2 mx-auto"></div>
-              <div className="bg-white p-6   w-1/2 mx-auto">
+              <div className="bg-white p-6 w-1/2 mx-auto">
                 <h2 className="text-2xl font-semibold mb-6">Cart totals</h2>
                 <div className="flex justify-between border p-4">
                   <span className="text-lg font-medium">Subtotal</span>
-                  <span className="text-lg font-medium">£51.00</span>
+                  <span className="text-lg font-medium">
+                    £{calculateTotal()}
+                  </span>
                 </div>
                 <div className="flex justify-between border-b border-x p-4 mb-6">
                   <span className="text-lg font-semibold">Total</span>
-                  <span className="text-lg font-semibold">£51.00</span>
+                  <span className="text-lg font-semibold">
+                    £{calculateTotal()}
+                  </span>
                 </div>
-                <button className=" bg-primary_color text-white py-4 px-8 rounded-full font-semibold hover:bg-purple-700 transition duration-300">
+                <button className="bg-primary_color text-white py-4 px-8 rounded-full font-semibold hover:bg-purple-700 transition duration-300">
                   PROCEED TO CHECKOUT
                 </button>
               </div>
