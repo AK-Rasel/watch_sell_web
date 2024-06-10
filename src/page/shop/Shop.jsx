@@ -126,7 +126,7 @@ const Shop = () => {
   return (
     <section className="mt-32">
       <div className="bg-text_white py-24 text-center">
-        <ShopBanner />
+        <ShopBanner routePath="product" />
       </div>
       <div className="container mx-auto my-36">
         <div className="mb-20 flex md:justify-between flex-col-reverse md:flex-row justify-center items-center lg:px-0 px-[75px]">

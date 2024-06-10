@@ -3,6 +3,7 @@ import green from "../../assets/Home/GreenWatch.jpg";
 import pupal2 from "../../assets/Home/prapal.jpg";
 import yowall from "../../assets/Home/Yowall.jpg";
 import Card from "../../components/Card";
+import { Link } from "react-router-dom";
 const colorVerity = [
   {
     id: 1,
@@ -31,6 +32,11 @@ const colorVerity = [
 ];
 
 const ChooseColor = () => {
+  const topScroll = () => {
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, 500);
+  };
   return (
     <section className="bg-secondary_background_color">
       {/* container ----start */}
@@ -61,9 +67,13 @@ const ChooseColor = () => {
         {/* card ---end*/}
         {/* show more---btn */}
         <div className="flex justify-center">
-          <button className="my-24 btn bg-secondary_background_color px-8 border-2  hover:text-text_hover_color duration-500 transition-all ease-in-out text-white py-4 text-sm font-bold uppercase rounded-full">
+          <Link
+            onClick={topScroll}
+            to="/shop"
+            className="my-24  bg-secondary_background_color px-8 border-2  hover:text-text_hover_color duration-500 transition-all ease-in-out text-white py-4 text-sm font-bold uppercase rounded-full"
+          >
             Show More
-          </button>
+          </Link>
         </div>
         {/* show more---end */}
       </div>

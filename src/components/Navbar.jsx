@@ -149,6 +149,8 @@ const Navbar = () => {
           ? "text-secondary_color"
           : currentPath === "/shop"
           ? "text-secondary_background_color"
+          : currentPath === "/cart"
+          ? "text-secondary_background_color"
           : "text-text_white"
       }`}
     >
@@ -180,7 +182,13 @@ const Navbar = () => {
     : 0;
 
   const handleMouseEnter = () => {
-    setIsHovered(true);
+    // console.log(location.pathname);
+
+    if (location.pathname === "/cart") {
+      setIsHovered(false);
+    } else {
+      setIsHovered(true);
+    }
   };
 
   const handleMouseLeave = () => {
@@ -188,7 +196,11 @@ const Navbar = () => {
   };
 
   const handleMenuMouseEnter = () => {
-    setIsMenuHovered(true);
+    if (location.pathname === "/cart") {
+      setIsMenuHovered(false);
+    } else {
+      setIsMenuHovered(true);
+    }
   };
 
   const handleMenuMouseLeave = () => {
@@ -204,6 +216,7 @@ const Navbar = () => {
       console.log(error.message);
     }
   };
+  // console.log(currentPath);
   return (
     <header className="w-full fixed top-0 right-0 z-50">
       <nav
@@ -219,6 +232,8 @@ const Navbar = () => {
               isSticky
                 ? "text-secondary_color"
                 : currentPath === "/shop"
+                ? "text-secondary_background_color"
+                : currentPath === "/cart"
                 ? "text-secondary_background_color"
                 : "text-text_white"
             }`}
@@ -255,6 +270,7 @@ const Navbar = () => {
                 className="relative w-full pl-4"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
+                onClick={topScroll}
               >
                 <div className="bg-primary_color group h-5 flex justify-center items-center p-1 rounded-lg absolute top-3 -right-2 text-text_white font-bold text-sm">
                   {lengthCarts}
@@ -313,9 +329,13 @@ const Navbar = () => {
                             SUBTOTAL: $ {totalPrice.toFixed(2)}
                           </p>
                           <div className="flex  text-text_white font-medium text-lg items-center pt-4">
-                            <button className="w-1/2 mx-auto text-center py-4  border-t border-gray-600 border-r">
+                            <Link
+                              to="/cart"
+                              onClick={topScroll}
+                              className="w-1/2 mx-auto text-center py-4  border-t border-gray-600 border-r"
+                            >
                               View Cart
-                            </button>
+                            </Link>
                             <button className="w-1/2 mx-auto text-center  border-t border-gray-600 py-4">
                               Checkout
                             </button>
