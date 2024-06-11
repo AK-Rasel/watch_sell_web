@@ -1,12 +1,15 @@
 import React from "react";
 import { PiShoppingCart } from "react-icons/pi";
+import { Link } from "react-router-dom";
 
 const ShopCard = ({ product, handelCart }) => {
-  const { img, price, productInformation, colorName } = product;
+  const { _id: id, img, price, productInformation, colorName } = product;
 
   return (
     <div className=" flex flex-col gap-5">
-      <img className="w-full" src={img} alt="" />
+      <Link to={`/product/${id}`}>
+        <img className="w-full" src={img} alt="" />
+      </Link>
       <div>
         <h3 className="text-lg   font-extrabold text-secondary_background_color">
           {colorName}
@@ -22,7 +25,7 @@ const ShopCard = ({ product, handelCart }) => {
           </button>
         </div>
         <span className="text-lg font-bold text-secondary_background_color">
-          ${price}
+          £{price}
         </span>
       </div>
     </div>

@@ -1,13 +1,13 @@
-// Navbar.js
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { RiCloseFill } from "react-icons/ri";
 import { SlMenu } from "react-icons/sl";
 import { PiShoppingCart } from "react-icons/pi";
 import { FaSearch } from "react-icons/fa";
-import useCarts from "../hooks/useCarts";
 import { AiOutlineClose } from "react-icons/ai";
+import useCarts from "../hooks/useCarts";
 import useAxiosPublic from "../hooks/useAxiosPublic";
+
 const navLinks = [
   { name: "Home", navPath: "/", sectionId: "#home" },
   { name: "Gallery", navPath: "/", sectionId: "#gallery" },
@@ -19,36 +19,19 @@ const navLinks = [
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [allCarts, refetch, isLoading] = useCarts();
+  const { id } = useParams();
+  const [allCarts, refetch] = useCarts();
   const axiosPublic = useAxiosPublic();
 
   const [isHovered, setIsHovered] = useState(false);
   const [isMenuHovered, setIsMenuHovered] = useState(false);
-
-  const [isToggled, setIsToggled] = useState(false);
-  const [isSticky, setSticky] = useState(false);
   const [isToggleMenu, setIsToggleMenu] = useState(false);
-  const [currentPath, setCurrentPath] = useState("");
+  const [isSticky, setSticky] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
-  // remove local stor---smart
-  useEffect(() => {
-    const handleRouteChange = () => {
-      if (currentPath === "/") {
-        localStorage.removeItem("sortOrder");
-      }
-    };
-
-    handleRouteChange(); // check initially
-    return () => handleRouteChange(); // clean up when the component unmounts
-  }, [currentPath]);
-  // remove local stor---end
+  const [currentPath, setCurrentPath] = useState(location.pathname);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const offset = window.scrollY;
-      setSticky(offset > 0);
-    };
-
+    const handleScroll = () => setSticky(window.scrollY > 0);
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
         setIsClosing(false);
@@ -58,13 +41,34 @@ const Navbar = () => {
 
     window.addEventListener("scroll", handleScroll);
     window.addEventListener("resize", handleResize);
-    setCurrentPath(location.pathname);
-
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleResize);
     };
-  }, [location.pathname]);
+  }, []);
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      if (currentPath === "/") {
+        localStorage.removeItem("sortOrder");
+      }
+    };
+    handleRouteChange();
+    return handleRouteChange;
+  }, [currentPath]);
+
+  useEffect(() => {
+    if (location.state?.sectionId) {
+      const targetSection = document.querySelector(location.state.sectionId);
+      if (targetSection) {
+        window.scrollTo({
+          top: targetSection.offsetTop,
+          behavior: "smooth",
+        });
+      }
+    }
+    setCurrentPath(location.pathname);
+  }, [location]);
 
   const toggleMenu = () => {
     if (isToggleMenu) {
@@ -84,40 +88,13 @@ const Navbar = () => {
     }, 500);
   };
 
-  useEffect(() => {
-    const handleSmoothScroll = (event) => {
-      event.preventDefault();
-      const targetId = event.currentTarget.getAttribute("href");
-      const targetSection = document.querySelector(targetId);
-      if (targetSection) {
-        const offsetTop = targetSection.getBoundingClientRect().top;
-        window.scrollTo({
-          top: offsetTop + window.scrollY,
-          behavior: "smooth",
-        });
-      }
-    };
-
-    const navLinks = document.querySelectorAll(".smooth-scroll");
-    navLinks.forEach((link) => {
-      link.addEventListener("click", handleSmoothScroll);
-    });
-
-    return () => {
-      navLinks.forEach((link) => {
-        link.removeEventListener("click", handleSmoothScroll);
-      });
-    };
-  }, []);
-
   const handleNavigation = (event, path, sectionId) => {
     event.preventDefault();
     if (currentPath === "/") {
       const targetSection = document.querySelector(sectionId);
       if (targetSection) {
-        const offsetTop = targetSection.getBoundingClientRect().top;
         window.scrollTo({
-          top: offsetTop + window.scrollY,
+          top: targetSection.offsetTop,
           behavior: "smooth",
         });
       }
@@ -127,29 +104,24 @@ const Navbar = () => {
     toggleMenu();
   };
 
-  useEffect(() => {
-    if (location.state?.sectionId) {
-      const sectionId = location.state.sectionId;
-      const targetSection = document.querySelector(sectionId);
-      if (targetSection) {
-        const offsetTop = targetSection.getBoundingClientRect().top;
-        window.scrollTo({
-          top: offsetTop + window.scrollY,
-          behavior: "smooth",
-        });
-      }
+  const handleDelete = async (id) => {
+    try {
+      await axiosPublic.delete(`/cart/${id}`);
+      refetch();
+    } catch (error) {
+      console.log(error.message);
     }
-  }, [location]);
+  };
 
   const navLinksJSX = navLinks.map((navItem, index) => (
     <li
       key={index}
-      className={`text-base font-bold hover:duration-300 hover:underline transition-all antialiased hover:text-[#828282] ${
+      className={`text-base font-bold hover:underline transition-all ${
         isSticky
           ? "text-secondary_color"
-          : currentPath === "/shop"
-          ? "text-secondary_background_color"
-          : currentPath === "/cart"
+          : currentPath === "/shop" ||
+            currentPath === "/cart" ||
+            currentPath === `/product/${id}`
           ? "text-secondary_background_color"
           : "text-text_white"
       }`}
@@ -160,7 +132,6 @@ const Navbar = () => {
         </Link>
       ) : (
         <a
-          className="smooth-scroll"
           href={navItem.sectionId}
           onClick={(e) =>
             handleNavigation(e, navItem.navPath, navItem.sectionId)
@@ -173,54 +144,17 @@ const Navbar = () => {
   ));
 
   const lengthCarts = Array.isArray(allCarts)
-    ? allCarts.reduce((acc, cart) => {
-        return acc + (cart.quantity || 0);
-      }, 0)
+    ? allCarts.reduce((acc, cart) => acc + (cart.quantity || 0), 0)
     : 0;
+
   const totalPrice = Array.isArray(allCarts)
     ? allCarts.reduce((acc, cart) => acc + cart.price * (cart.quantity || 0), 0)
     : 0;
 
-  const handleMouseEnter = () => {
-    // console.log(location.pathname);
-
-    if (location.pathname === "/cart") {
-      setIsHovered(false);
-    } else {
-      setIsHovered(true);
-    }
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
-
-  const handleMenuMouseEnter = () => {
-    if (location.pathname === "/cart") {
-      setIsMenuHovered(false);
-    } else {
-      setIsMenuHovered(true);
-    }
-  };
-
-  const handleMenuMouseLeave = () => {
-    setIsMenuHovered(false);
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      const res = await axiosPublic.delete(`/cart/${id}`);
-      refetch();
-      console.log(res);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-  // console.log(currentPath);
   return (
     <header className="w-full fixed top-0 right-0 z-50">
       <nav
-        className={` ${
+        className={`${
           isSticky
             ? "shadow-xl transition-all duration-300 ease-out py-5 px-8 bg-white"
             : "bg-transparent px-8 pt-10"
@@ -231,9 +165,9 @@ const Navbar = () => {
             className={`font-bold text-3xl uppercase ${
               isSticky
                 ? "text-secondary_color"
-                : currentPath === "/shop"
-                ? "text-secondary_background_color"
-                : currentPath === "/cart"
+                : currentPath === "/shop" ||
+                  currentPath === "/cart" ||
+                  currentPath === `/product/${id}`
                 ? "text-secondary_background_color"
                 : "text-text_white"
             }`}
@@ -249,27 +183,18 @@ const Navbar = () => {
             <span className="lg:hidden mr-4">
               <button onClick={toggleMenu}>
                 {isToggleMenu ? (
-                  <RiCloseFill
-                    className={`text-2xl text-[#A07EB5] menu-icon ${
-                      isToggleMenu ? "open" : ""
-                    }`}
-                  />
+                  <RiCloseFill className="text-2xl text-[#A07EB5] menu-icon" />
                 ) : (
-                  <SlMenu
-                    className={`text-2xl text-[#A07EB5] menu-icon ${
-                      isToggleMenu ? "open" : ""
-                    }`}
-                  />
+                  <SlMenu className="text-2xl text-[#A07EB5] menu-icon" />
                 )}
               </button>
             </span>
-            {/* cart for quantity ----------------------*/}
             <div className="relative pb-6">
               <Link
                 to="/cart"
                 className="relative w-full pl-4"
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
                 onClick={topScroll}
               >
                 <div className="bg-primary_color group h-5 flex justify-center items-center p-1 rounded-lg absolute top-3 -right-2 text-text_white font-bold text-sm">
@@ -285,76 +210,70 @@ const Navbar = () => {
                 className={`absolute top-0 -right-16 mt-16 bg-[#232323] shadow-lg rounded mobile-nav ${
                   isHovered || isMenuHovered ? "open" : ""
                 }`}
-                onMouseEnter={handleMenuMouseEnter}
-                onMouseLeave={handleMenuMouseLeave}
+                onMouseEnter={() => setIsMenuHovered(true)}
+                onMouseLeave={() => setIsMenuHovered(false)}
               >
-                <div className="w-96 ">
-                  <>
-                    {lengthCarts === 0 ? (
-                      <p className="p-4  text-text_hover_color">
-                        No products in the cart
-                      </p>
-                    ) : (
-                      <div>
-                        {allCarts.map((cart, index) => (
-                          <div className="flex p-4 " key={cart._id}>
-                            <div className="flex-shrink-0 w-16 h-12">
-                              <img className="w-full" src={cart.img} alt="" />
-                            </div>
-                            <div className="ml-3 flex-1">
-                              <p className="text-xl font-bold text-text_white">
-                                {cart.colorName}
-                              </p>
-                              <p className="mt-1 text-lg text-gray-500">
-                                {cart.quantity} x
-                                <span className="font-bold text-primary_color">
-                                  {" $" + cart.price}
-                                </span>
-                              </p>
-                            </div>
-                            {/* cancel-------------------------------- */}
-                            <div
-                              onClick={() => handleDelete(cart._id)}
-                              className="flex items-center"
-                            >
-                              <button className="w-full border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-text_white">
-                                <AiOutlineClose className="text-xl" />
-                              </button>
-                            </div>
-                            {/* --------------------------------------------- */}
+                <div className="w-96">
+                  {lengthCarts === 0 ? (
+                    <p className="p-4 text-text_hover_color">
+                      No products in the cart
+                    </p>
+                  ) : (
+                    <div>
+                      {allCarts.map((cart) => (
+                        <div className="flex p-4" key={cart._id}>
+                          <div className="flex-shrink-0 w-16 h-12">
+                            <img className="w-full" src={cart.img} alt="" />
                           </div>
-                        ))}
-                        <div className="w-full text-center border-t border-gray-600 mt-4 ">
-                          <p className="text-lg text-text_white py-4">
-                            SUBTOTAL: $ {totalPrice.toFixed(2)}
-                          </p>
-                          <div className="flex  text-text_white font-medium text-lg items-center pt-4">
-                            <Link
-                              to="/cart"
-                              onClick={topScroll}
-                              className="w-1/2 mx-auto text-center py-4  border-t border-gray-600 border-r"
-                            >
-                              View Cart
-                            </Link>
-                            <button className="w-1/2 mx-auto text-center  border-t border-gray-600 py-4">
-                              Checkout
+                          <div className="ml-3 flex-1">
+                            <p className="text-xl font-bold text-text_white">
+                              {cart.colorName}
+                            </p>
+                            <p className="mt-1 text-lg text-gray-500">
+                              {cart.quantity} x
+                              <span className="font-bold text-primary_color">
+                                {" $" + cart.price}
+                              </span>
+                            </p>
+                          </div>
+                          <div
+                            onClick={() => handleDelete(cart._id)}
+                            className="flex items-center"
+                          >
+                            <button className="w-full border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-text_white">
+                              <AiOutlineClose className="text-xl" />
                             </button>
                           </div>
                         </div>
+                      ))}
+                      <div className="w-full text-center border-t border-gray-600 mt-4">
+                        <p className="text-lg text-text_white py-4">
+                          SUBTOTAL: ${totalPrice.toFixed(2)}
+                        </p>
+                        <div className="flex text-text_white font-medium text-lg items-center pt-4">
+                          <Link
+                            to="/cart"
+                            onClick={topScroll}
+                            className="w-1/2 mx-auto text-center py-4 border-t border-gray-600 border-r"
+                          >
+                            View Cart
+                          </Link>
+                          <button className="w-1/2 mx-auto text-center border-t border-gray-600 py-4">
+                            Checkout
+                          </button>
+                        </div>
                       </div>
-                    )}
-                  </>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
-            {/* ---------------- */}
             <button className="hidden lg:block btn bg-primary_color px-8 hover:bg-primary_hover_color hover:duration-200 hover:transition-all text-white py-4 text-sm font-bold uppercase rounded-full">
               Login
             </button>
           </div>
         </div>
       </nav>
-      {/* mobile nav */}
       <nav
         className={`lg:hidden block mobile-nav ${isToggleMenu ? "open" : ""} ${
           isClosing ? "closing" : ""
@@ -366,7 +285,7 @@ const Navbar = () => {
               {navLinks.map((navItem, index) => (
                 <li
                   key={index}
-                  className="text-sm font-normal hover:duration-300 hover:underline transition-all antialiased hover:text-[#828282] text-white py-2"
+                  className="text-sm font-normal hover:underline transition-all text-white py-2"
                 >
                   <Link
                     onClick={(e) =>
@@ -382,9 +301,7 @@ const Navbar = () => {
                   >
                     {navItem.name}
                   </Link>
-                  {navItem.name === "Shop" ? (
-                    ""
-                  ) : (
+                  {navItem.name !== "Shop" && (
                     <div className="w-full my-3 border-secondary_background_color border-t-2"></div>
                   )}
                 </li>

@@ -7,7 +7,7 @@ import useAxiosPublic from "../../hooks/useAxiosPublic";
 import toast from "react-hot-toast";
 import { RiCloseFill } from "react-icons/ri";
 import {} from "react-dom";
-import { Link } from "react-router-dom";
+
 import useCarts from "../../hooks/useCarts";
 
 const Shop = () => {
@@ -79,7 +79,6 @@ const Shop = () => {
     try {
       const res = await axiosPublic.put(`/cart/${id}`, cartItem);
       if (res.status === 200) {
-        // console.log(res.data.message);
         refetch();
         // tost------------------------------------------
 
