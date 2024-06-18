@@ -223,7 +223,9 @@ const Navbar = () => {
                       {allCarts.map((cart) => (
                         <div className="flex p-4" key={cart._id}>
                           <div className="flex-shrink-0 w-16 h-12">
-                            <img className="w-full" src={cart.img} alt="" />
+                            <Link to={`/product/${cart._id}`}>
+                              <img className="w-full" src={cart.img} alt="" />
+                            </Link>
                           </div>
                           <div className="ml-3 flex-1">
                             <p className="text-xl font-bold text-text_white">

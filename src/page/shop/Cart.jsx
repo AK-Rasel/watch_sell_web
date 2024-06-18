@@ -5,6 +5,7 @@ import { IoArrowDown, IoArrowUp } from "react-icons/io5";
 import { PiCompass } from "react-icons/pi";
 import useCarts from "../../hooks/useCarts";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
   const [allCarts, refetch, isLoading] = useCarts();
@@ -131,11 +132,13 @@ const Cart = () => {
                           </button>
                         </td>
                         <td className="flex items-center justify-center py-8">
-                          <img
-                            src={img}
-                            alt="Product"
-                            className="w-24 h-24 object-cover mr-4"
-                          />
+                          <Link to={`/product/${_id}`}>
+                            <img
+                              src={img}
+                              alt="Product"
+                              className="w-24 h-24 object-cover mr-4"
+                            />
+                          </Link>
                         </td>
                         <td className="border-x text-center py-8">
                           <h4>{colorName}</h4>

@@ -18,6 +18,9 @@ export default {
         secondary_background_color: "#363636",
         text_white: "#F4F4F4",
         text_black: "#F4F4F4",
+
+        selection: "#7D1EFF",
+        selectionText: "#ffffff",
       },
       fontFamily: {
         Poppins: ["Poppins", "sans-serif"],

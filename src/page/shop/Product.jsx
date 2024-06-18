@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import { useQuery } from "@tanstack/react-query";
@@ -6,30 +6,25 @@ import ShopBanner from "../../components/ShopBanner";
 import { IoArrowDown, IoArrowUp } from "react-icons/io5";
 import { LuShoppingCart } from "react-icons/lu";
 import { CiShare2 } from "react-icons/ci";
-
 import Tabs from "../../components/Tabs/Tabs";
-
 import Tab from "../../components/Tabs/Tab";
 import TabPanel from "../../components/Tabs/TabPanel";
 import TabList from "../../components/Tabs/TabList";
 import StarRating from "../../components/StarRating";
+
 const Product = () => {
-  // new-*--------------
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const { id } = useParams();
+  const axiosPublic = useAxiosPublic();
+  const [quantity, setQuantity] = useState(1);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission
     console.log({ rating, review, name, email });
   };
-
-  // new-*--------------
-
-  const { id } = useParams();
-  const axiosPublic = useAxiosPublic();
 
   const {
     data: product = null,
@@ -43,8 +38,14 @@ const Product = () => {
       const res = await axiosPublic.get(`/cart/${id}`);
       return res.data;
     },
-    enabled: !!id, // Ensure the query runs only if `id` is not null
+    enabled: !!id,
   });
+
+  useEffect(() => {
+    // if (product) {
+    //   setQuantity(product.quantity || 1);
+    // }
+  }, [product]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -60,18 +61,47 @@ const Product = () => {
 
   const {
     colorName,
+    quantity: quantityBack,
     sales,
     releaseDate,
-    // rating,
     productInformation,
     price,
     description2,
     description1,
     img,
+    _id,
   } = product;
+  console.log(quantity);
   const [firstSentence, ...restOfDescription] = description2.split(". ");
-
   const restOfDescriptionText = restOfDescription.join(". ");
+
+  const handleQuantityUp = () => {
+    setQuantity((prevQuantity) => prevQuantity + 1);
+  };
+
+  const handleQuantityDown = () => {
+    setQuantity((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
+  };
+  // const axiosPublic
+  const handleAddToCart = async (e) => {
+    e.preventDefault();
+    const productData = {
+      colorName,
+      img,
+      price,
+      productInformation,
+      rating,
+      releaseDate,
+      sales,
+      _id,
+      quantity: quantity,
+    };
+
+    const res = await axiosPublic.put(`/cart/${_id}`, productData);
+    console.log(res.data);
+    console.log(res);
+  };
+
   return (
     <section className="mt-32">
       <div className="bg-text_white py-24 text-center">
@@ -83,17 +113,11 @@ const Product = () => {
           }
         />
       </div>
-      {/* <h1>{product.colorName}</h1>
-      <img className="w-[668px]" src={product.img} alt={product.colorName} />
-      <p>{product.productInformation}</p>
-      <p>£{product.price}</p> */}
-
       <div className="container mx-auto">
-        <div className="flex justify-between  gap-14 mt-[70px] mb-24">
+        <div className="flex justify-between gap-14 mt-[70px] mb-24">
           <div className="w-1/2">
-            <img className="w-[668px] " src={img} alt={colorName} />
+            <img className="w-[668px]" src={img} alt={colorName} />
           </div>
-          {/* text ------------------------------------------------------------------*/}
           <div className="w-1/2">
             <h1 className="text-3xl font-extrabold text-[#3F3849]">
               {colorName}
@@ -104,46 +128,51 @@ const Product = () => {
             <p className="text-base text-[#8D8698] leading-[28px] font-medium">
               {description1}
             </p>
-            <form className="flex justify-between items-center">
+            <form
+              className="flex justify-between items-center"
+              onSubmit={(e) => {
+                handleAddToCart(e);
+              }}
+            >
               <div className="my-9">
                 <button
+                  type="button"
                   className="p-5 mr-0 bg-slate-100 rounded-full"
-                  // onClick={() => handleQuantityDown(cart)}
+                  onClick={handleQuantityDown}
                 >
                   <IoArrowDown className="text-xl text-slate-600" />
                 </button>
                 <input
                   type="text"
-                  value={1}
-                  // onChange={(e) =>
-                  //   handleQuantityChange(
-                  //     cart,
-                  //     parseInt(e.target.value)
-                  //   )
-                  // }
+                  value={quantity}
+                  // onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
                   className="w-14 text-center text-xl text-slate-600"
+                  readOnly
                 />
                 <button
-                  // onClick={() => handleQuantityUp(cart)}
+                  type="button"
+                  onClick={handleQuantityUp}
                   className="p-5 ml-0 bg-slate-100 rounded-full"
                 >
                   <IoArrowUp className="text-xl text-slate-600" />
                 </button>
               </div>
-              <button className="py-4 flex gap-3 items-center px-8 bg-primary_color rounded-full cursor-pointer text-sm font-bold text-white ">
+              <button
+                type="submit"
+                className="py-4 flex gap-3 items-center px-8 bg-primary_color rounded-full cursor-pointer text-sm font-bold text-white"
+              >
                 <LuShoppingCart className="text-xl" /> ADD TO CART
               </button>
             </form>
             <p className="text-lg text-[#3F3849]">
-              <span className=" font-bold text-xl ">Category :</span>{" "}
+              <span className="font-bold text-xl">Category :</span>{" "}
               <span className="uppercase"> {productInformation}</span>
             </p>
             <button className="mt-8 bg-[#F2F2F2] custom-hover-effect rounded-full px-7 py-3 text-base uppercase flex gap-4 items-center text-[#8D8698] font-bold">
               <CiShare2 className="text-3xl" />
               Share
             </button>
-
-            {/* --------------------------------------- */}
+            {/* tabs----------------------------------- */}
             <div className="mt-8">
               <Tabs>
                 <TabList>
@@ -151,7 +180,6 @@ const Product = () => {
                   <Tab>Additional information</Tab>
                   <Tab>Reviews (0)</Tab>
                 </TabList>
-
                 <TabPanel>
                   <div>
                     <h2 className="text-lg font-extrabold text-[#3F3849] mb-5">
@@ -165,6 +193,7 @@ const Product = () => {
                     </p>
                   </div>
                 </TabPanel>
+                {/* Additional information 🌹🌹🌹🌹🌹 */}
                 <TabPanel>
                   <div>
                     <h2 className="text-lg font-bold mb-4">
@@ -196,6 +225,7 @@ const Product = () => {
                     </table>
                   </div>
                 </TabPanel>
+                {/* reviews  🌟🌟🌟🌟🌟🌟 */}
                 <TabPanel>
                   <div>
                     <form onSubmit={handleSubmit} className="p-4 space-y-4">
@@ -204,7 +234,7 @@ const Product = () => {
                       </h3>
                       <StarRating rating={rating} setRating={setRating} />
                       <textarea
-                        value={review}
+                        defaultValue={review}
                         onChange={(e) => setReview(e.target.value)}
                         placeholder="Your review"
                         className="w-full p-2 border border-gray-300 rounded-md"
@@ -213,7 +243,7 @@ const Product = () => {
                       />
                       <input
                         type="text"
-                        value={name}
+                        defaultValue={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Name"
                         className="w-full p-2 border border-gray-300 rounded-md"
@@ -221,7 +251,7 @@ const Product = () => {
                       />
                       <input
                         type="email"
-                        value={email}
+                        defaultValue={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Email"
                         className="w-full p-2 border border-gray-300 rounded-md"
