@@ -1,7 +1,7 @@
 import React from "react";
 
 const ShopBanner = ({ routePath }) => {
-  // const routePath = "prduct";
+  
   return (
     <div className=" container mx-auto">
       <h2 className="text-2xl font-bold">Shop</h2>

@@ -24,12 +24,12 @@ const CartProgress = ({
           View Cart
         </h4>
         <h4
-          className={`w-1/2 mx-auto text-center p-3 bg-[${bgColor2}] rounded-full ${whiteText2} ${primaryLiteText2}`}
+          className={`w-1/2 mx-auto text-center p-3 ${bgColor2} rounded-full ${whiteText2} ${primaryLiteText2}`}
         >
           Checkout
         </h4>
         <h4
-          className={`w-1/2 mx-auto text-center p-3 bg-[${bgColor3}] rounded-full ${whiteText3} ${primaryLiteText3}`}
+          className={`w-1/2 mx-auto text-center p-3 ${bgColor3} rounded-full ${whiteText3} ${primaryLiteText3}`}
         >
           Done
         </h4>

@@ -11,6 +11,7 @@ const Cart = () => {
   const [allCarts, refetch, isLoading] = useCarts();
   const axiosPublic = useAxiosPublic();
 
+
   const handleQuantityChange = async (cart, newQuantity) => {
     console.log(newQuantity);
     const { _id: id, quantity } = cart;
@@ -196,9 +197,9 @@ const Cart = () => {
                     £{calculateTotal()}
                   </span>
                 </div>
-                <button className="bg-primary_color text-white py-4 px-8 rounded-full font-semibold hover:bg-purple-700 transition duration-300">
+                <Link to={`/checkout`}><button  className="bg-primary_color text-white py-4 px-8 rounded-full font-semibold hover:bg-purple-700 transition duration-300">
                   PROCEED TO CHECKOUT
-                </button>
+                </button></Link>
               </div>
             </div>
           </div>

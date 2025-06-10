@@ -140,6 +140,7 @@ const Product = () => {
     } catch (error) {
       console.error("Error adding to cart:", error);
     }
+    refetch();
   };
 
   const handleSubmitReview = (e) => {

@@ -121,7 +121,8 @@ const Navbar = () => {
           ? "text-secondary_color"
           : currentPath === "/shop" ||
             currentPath === "/cart" ||
-            currentPath === `/product/${id}`
+            currentPath === `/product/${id}`||
+            currentPath === "/checkout"
           ? "text-secondary_background_color"
           : "text-text_white"
       }`}
@@ -167,7 +168,8 @@ const Navbar = () => {
                 ? "text-secondary_color"
                 : currentPath === "/shop" ||
                   currentPath === "/cart" ||
-                  currentPath === `/product/${id}`
+                  currentPath === `/product/${id}`||
+                  currentPath === "/checkout"
                 ? "text-secondary_background_color"
                 : "text-text_white"
             }`}
