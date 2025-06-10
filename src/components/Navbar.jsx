@@ -173,7 +173,8 @@ const Navbar = () => {
             }`}
           >
             <Link to="/">
-              AK <span className="text-primary_color">.</span> Rasel
+              Smart<span className="text-primary_color">.</span> Watch
+               
             </Link>
           </h1>
           <div className="hidden lg:block">

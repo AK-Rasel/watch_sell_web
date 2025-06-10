@@ -9,9 +9,10 @@ import { RiCloseFill } from "react-icons/ri";
 import {} from "react-dom";
 
 import useCarts from "../../hooks/useCarts";
+import Loading from "../../components/Loading";
 
 const Shop = () => {
-  const [allProducts] = useProducts();
+  const [allProducts, , isLoading] = useProducts();
   const axiosPublic = useAxiosPublic();
   const [_, refetch] = useCarts();
 
@@ -148,22 +149,29 @@ const Shop = () => {
             </select>
           </form>
           <p className="text-base w-full md:text-end mb-6 md:mb-0 text-center font-medium text-[#8D8698]">
-            Showing all 8 results
+            Showing all <span>{products.length}</span> results
           </p>
         </div>
-        {loading ? (
-          <div className="loading-indicator">Loading...</div>
+        {isLoading ? (
+          <Loading/>
         ) : (
-          <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-9 lg:px-0 px-10">
-            {Array.isArray(products) &&
-              products.map((product) => (
-                <ShopCard
-                  key={product._id}
-                  product={product}
-                  handelCart={handelCart}
-                />
-              ))}
-          </div>
+          <span>
+            {" "}
+            {loading ? (
+             <Loading/>
+            ) : (
+              <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-9 lg:px-0 px-10">
+                {Array.isArray(products) &&
+                  products.map((product) => (
+                    <ShopCard
+                      key={product._id}
+                      product={product}
+                      handelCart={handelCart}
+                    />
+                  ))}
+              </div>
+            )}
+          </span>
         )}
       </div>
     </section>

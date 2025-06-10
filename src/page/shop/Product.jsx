@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import { useQuery } from "@tanstack/react-query";
@@ -11,6 +11,10 @@ import Tab from "../../components/Tabs/Tab";
 import TabPanel from "../../components/Tabs/TabPanel";
 import TabList from "../../components/Tabs/TabList";
 import StarRating from "../../components/StarRating";
+import { RiCloseFill } from "react-icons/ri";
+import toast from "react-hot-toast";
+import useCarts from "../../hooks/useCarts";
+import Loading from "../../components/Loading";
 
 const Product = () => {
   const [rating, setRating] = useState(0);
@@ -20,15 +24,10 @@ const Product = () => {
   const { id } = useParams();
   const axiosPublic = useAxiosPublic();
   const [quantity, setQuantity] = useState(1);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log({ rating, review, name, email });
-  };
+ const [_, refetch] = useCarts();
 
   const {
     data: product = null,
-    refetch,
     isLoading,
     isError,
     error,
@@ -41,14 +40,10 @@ const Product = () => {
     enabled: !!id,
   });
 
-  useEffect(() => {
-    // if (product) {
-    //   setQuantity(product.quantity || 1);
-    // }
-  }, [product]);
-
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className="h-screen flex justify-center items-center">
+      <Loading/>
+    </div>;
   }
 
   if (isError) {
@@ -56,7 +51,11 @@ const Product = () => {
   }
 
   if (!product) {
-    return <div>No product found</div>;
+    return <div className="h-screen flex justify-center items-center">
+      
+      
+<div >No product found</div>
+    </div>;
   }
 
   const {
@@ -71,7 +70,7 @@ const Product = () => {
     img,
     _id,
   } = product;
-  console.log(quantity);
+
   const [firstSentence, ...restOfDescription] = description2.split(". ");
   const restOfDescriptionText = restOfDescription.join(". ");
 
@@ -82,7 +81,7 @@ const Product = () => {
   const handleQuantityDown = () => {
     setQuantity((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
   };
-  // const axiosPublic
+
   const handleAddToCart = async (e) => {
     e.preventDefault();
     const productData = {
@@ -97,13 +96,60 @@ const Product = () => {
       quantity: quantity,
     };
 
-    const res = await axiosPublic.put(`/cart/${_id}`, productData);
-    console.log(res.data);
-    console.log(res);
+    try {
+      const res = await axiosPublic.put(`/cart/${_id}`, productData);
+
+      if (res.status === 200) {
+        toast.custom((t) => (
+          <div
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-xl w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+          >
+            <div className="flex-1 w-0 p-4">
+              <div className="flex items-start">
+                <div className="ml-3 flex-1 gap-5 grid">
+                  <p className="text-lg font-medium text-gray-900">
+                    <span className="font-bold text-base">{colorName}</span> has
+                    been added to the cart.
+                    <span>
+                      {" "}
+                      <a
+                        href="/cart"
+                        className="font-bold text-primary_color text-lg font-Poppins"
+                      >
+                        Show Cart
+                      </a>
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="flex border-l border-gray-200">
+              <button
+                onClick={() => toast.dismiss(t.id)}
+                className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center   text-text_hover_color  "
+              >
+                <RiCloseFill className="text-xl " />
+              </button>
+            </div>
+          </div>
+        ));
+        refetch(); // Ensure refetch is called after the toast notification
+      }
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    }
+  };
+
+  const handleSubmitReview = (e) => {
+    e.preventDefault();
+    console.log({ rating, review, name, email });
+    // Implement review submission logic here
   };
 
   return (
-    <section className="mt-32">
+    <section className="mt-32 " >
       <div className="bg-text_white py-24 text-center">
         <ShopBanner
           routePath={
@@ -130,9 +176,7 @@ const Product = () => {
             </p>
             <form
               className="flex justify-between items-center"
-              onSubmit={(e) => {
-                handleAddToCart(e);
-              }}
+              onSubmit={handleAddToCart}
             >
               <div className="my-9">
                 <button
@@ -145,7 +189,6 @@ const Product = () => {
                 <input
                   type="text"
                   value={quantity}
-                  // onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
                   className="w-14 text-center text-xl text-slate-600"
                   readOnly
                 />
@@ -172,7 +215,6 @@ const Product = () => {
               <CiShare2 className="text-3xl" />
               Share
             </button>
-            {/* tabs----------------------------------- */}
             <div className="mt-8">
               <Tabs>
                 <TabList>
@@ -193,7 +235,6 @@ const Product = () => {
                     </p>
                   </div>
                 </TabPanel>
-                {/* Additional information 🌹🌹🌹🌹🌹 */}
                 <TabPanel>
                   <div>
                     <h2 className="text-lg font-bold mb-4">
@@ -225,16 +266,18 @@ const Product = () => {
                     </table>
                   </div>
                 </TabPanel>
-                {/* reviews  🌟🌟🌟🌟🌟🌟 */}
                 <TabPanel>
                   <div>
-                    <form onSubmit={handleSubmit} className="p-4 space-y-4">
+                    <form
+                      onSubmit={handleSubmitReview}
+                      className="p-4 space-y-4"
+                    >
                       <h3 className="text-lg font-semibold">
-                        Be the first to review Charcoal Black
+                        Be the first to review {colorName}
                       </h3>
                       <StarRating rating={rating} setRating={setRating} />
                       <textarea
-                        defaultValue={review}
+                        value={review}
                         onChange={(e) => setReview(e.target.value)}
                         placeholder="Your review"
                         className="w-full p-2 border border-gray-300 rounded-md"
@@ -243,7 +286,7 @@ const Product = () => {
                       />
                       <input
                         type="text"
-                        defaultValue={name}
+                        value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Name"
                         className="w-full p-2 border border-gray-300 rounded-md"
@@ -251,7 +294,7 @@ const Product = () => {
                       />
                       <input
                         type="email"
-                        defaultValue={email}
+                        value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Email"
                         className="w-full p-2 border border-gray-300 rounded-md"
