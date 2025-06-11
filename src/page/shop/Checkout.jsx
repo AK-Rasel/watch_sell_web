@@ -1,12 +1,24 @@
 import CartProgress from "../../components/CartProgress";
 import ShopBanner from "../../components/ShopBanner";
 import useCarts from "../../hooks/useCarts";
+import {useForm}from "react-hook-form"
 
 export const Checkout = () => {
   const [allCarts, refetch, isLoading] = useCarts();
-  // console.log(allCarts);
+
 
 const subtotal = allCarts.reduce((sum,cart)=>sum+cart.price*cart.quantity,0).toFixed(2)
+
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm()
+const onSubmit = data => console.log(data)
+
+
 
 
   return (
@@ -24,7 +36,11 @@ const subtotal = allCarts.reduce((sum,cart)=>sum+cart.price*cart.quantity,0).toF
       primaryLiteText3="text-primary_hover_color"
     />
 
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
+
+
+
+
       <div className="flex flex-col lg:flex-row gap-12">
         {/* Left */}
         <div className="w-full">
@@ -37,13 +53,13 @@ const subtotal = allCarts.reduce((sum,cart)=>sum+cart.price*cart.quantity,0).toF
               <legend className="mb-2 font-semibold text-gray-500">
                 First name
               </legend>
-              <input type="text" className="h-14 border w-full p-3" />
+              <input type="text"  {...register("firstName",{required:true})}  className="h-14 border w-full p-3" />
             </div>
             <div className="w-full">
               <legend className="mb-2 font-semibold text-gray-500">
                 Last name
               </legend>
-              <input type="text" className="h-14 border w-full p-3" />
+              <input type="text" {...register("lastName")} className="h-14 border w-full p-3" />
             </div>
           </div>
 
@@ -52,7 +68,7 @@ const subtotal = allCarts.reduce((sum,cart)=>sum+cart.price*cart.quantity,0).toF
             <legend className="mb-2 font-semibold text-gray-500">
               Company name (optional)
             </legend>
-            <input type="text" className="h-14 border w-full p-3" />
+            <input type="text" {...register("companyName")} className="h-14 border w-full p-3" />
           </div>
 
           {/* Country */}
@@ -60,10 +76,11 @@ const subtotal = allCarts.reduce((sum,cart)=>sum+cart.price*cart.quantity,0).toF
             <legend className="mb-2 font-semibold text-gray-500">
               Country / Region
             </legend>
-            <select className="h-14 border w-full p-3">
-              <option selected className="text-gray-400">
+            <select   {...register("country")} className="h-14 border w-full p-3">
+              <option  className="text-gray-400">
                 Choose a country
               </option>
+              <option value="BD">Bangladesh</option>
               <option value="US">United States</option>
               <option value="CA">Canada</option>
               <option value="FR">France</option>
@@ -78,11 +95,13 @@ const subtotal = allCarts.reduce((sum,cart)=>sum+cart.price*cart.quantity,0).toF
             </legend>
             <input
               type="text"
+              {...register("streetAddress")}
               placeholder="House number and street name"
               className="h-14 border w-full p-3"
             />
             <input
               type="text"
+              {...register("apartmentSuiteUnit")}
               placeholder="Apartment, suite, unit, etc. (optional)"
               className="h-14 mt-7 border w-full p-3"
             />
@@ -93,7 +112,7 @@ const subtotal = allCarts.reduce((sum,cart)=>sum+cart.price*cart.quantity,0).toF
             <legend className="mb-2 font-semibold text-gray-500">
               Town / City
             </legend>
-            <input type="text" className="h-14 border w-full p-3" />
+            <input type="text" {...register("townCity")} className="h-14 border w-full p-3" />
           </div>
 
           {/* District */}
@@ -103,6 +122,7 @@ const subtotal = allCarts.reduce((sum,cart)=>sum+cart.price*cart.quantity,0).toF
             </legend>
             <input
               type="text"
+              {...register("district")}
               className="h-14 border w-full p-3"
               placeholder="Select an option…"
             />
@@ -113,13 +133,13 @@ const subtotal = allCarts.reduce((sum,cart)=>sum+cart.price*cart.quantity,0).toF
             <legend className="mb-2 font-semibold text-gray-500">
               Postcode / ZIP
             </legend>
-            <input type="text" className="h-14 border w-full p-3" />
+            <input type="number" {...register("ZIP/Postcode")} className="h-14 border w-full p-3" />
           </div>
 
           {/* Phone */}
           <div className="mt-7">
             <legend className="mb-2 font-semibold text-gray-500">Phone</legend>
-            <input type="text" className="h-14 border w-full p-3" />
+            <input type="number" {...register("phone")} className="h-14 border w-full p-3" />
           </div>
 
           {/* Email */}
@@ -127,7 +147,7 @@ const subtotal = allCarts.reduce((sum,cart)=>sum+cart.price*cart.quantity,0).toF
             <legend className="mb-2 font-semibold text-gray-500">
               Email address
             </legend>
-            <input type="text" className="h-14 border w-full p-3" />
+            <input type="email" {...register("emailAddress")} className="h-14 border w-full p-3" />
           </div>
         </div>
 
@@ -185,7 +205,7 @@ const subtotal = allCarts.reduce((sum,cart)=>sum+cart.price*cart.quantity,0).toF
       </div>
 
       <div className="flex justify-center lg:justify-end mt-12">
-        <button className="btn bg-primary_color px-8 hover:bg-primary_hover_color hover:duration-200 hover:transition-all text-white py-4 text-sm font-bold uppercase rounded-full">
+        <button type="submit" className="btn bg-primary_color px-8 hover:bg-primary_hover_color hover:duration-200 hover:transition-all text-white py-4 text-sm font-bold uppercase rounded-full">
           Place order
         </button>
       </div>
