@@ -4,7 +4,11 @@ import useCarts from "../../hooks/useCarts";
 
 export const Checkout = () => {
   const [allCarts, refetch, isLoading] = useCarts();
-  console.log(allCarts);
+  // console.log(allCarts);
+
+const subtotal = allCarts.reduce((sum,cart)=>sum+cart.price*cart.quantity,0).toFixed(2)
+
+
   return (
     <section className="mt-32 mb-24">
       <div className="bg-text_white py-24 text-center">
@@ -145,50 +149,45 @@ export const Checkout = () => {
                 </span>
               </div>
               {/* map cart---------------------- */}
-              <div className="grid grid-cols-2 px-4 py-3 border-t border-gray-200">
-                <span className="text-gray-700">
-                  Golden Sunset <span className="font-semibold">× 5</span>
-                </span>
-                <span>
-                  <span className="text-right">£127.50</span>
-                </span>
-              </div>
-              <div className="grid grid-cols-2 px-4 py-3 border-t border-gray-200">
-                <span className="text-gray-700">
-                  Golden Sunset <span className="font-semibold">× 5</span>
-                </span>
-                <span>
-                  <span className="text-right">£127.50</span>
-                </span>
-              </div>
-              <div className="grid grid-cols-2 px-4 py-3 border-t border-gray-200">
-                <span className="text-gray-700">
-                  Golden Sunset <span className="font-semibold">× 5</span>
-                </span>
-                <span>
-                  <span className="text-right">£127.50</span>
-                </span>
-              </div>
 
+              {allCarts.map((cart, index) => {
+                console.log(cart)
+                return (
+                  <div
+                    key={index}
+                    className="grid grid-cols-2 px-4 py-3 border-t border-gray-200"
+                  >
+                    <span className="text-gray-700">
+                      {cart.colorName}{" "}
+                      <span className="font-semibold">× {cart.quantity}</span>
+                    </span>
+                    <span>
+                      <span className="text-right">£127.50</span>
+                    </span>
+                  </div>
+                );
+              })}
+
+              {/* map cart---------------------- end*/}
               <div className="grid grid-cols-2 font-semibold px-4 py-3 border-t border-gray-200">
                 <span>Subtotal</span>
                 <span>
                   {/* all  total count*/}
-                  <span className="text-right">£382.5</span>
+                  <span className="text-right">£{subtotal}</span>
                 </span>
               </div>
               <div className="grid grid-cols-2 font-bold px-4 py-4 bg-gray-100 border-t border-gray-300">
                 <span>Total</span>
                 <span className="">
-                  <span className="text-right border-r">£382.5</span>
+                  <span className="text-right border-r">£{subtotal}</span>
                 </span>
               </div>
             </div>
           </div>
           <div className="grid justify-end mt-12">
             <button className="hidden  lg:block btn bg-primary_color px-8 hover:bg-primary_hover_color hover:duration-200 hover:transition-all text-white py-4 text-sm font-bold uppercase rounded-full">
-            Place order
-          </button>
+              Place order
+            </button>
           </div>
         </form>
       </div>
